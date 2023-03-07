@@ -1,0 +1,47 @@
+.video-js.vjs-dash-hls-bitrate-switcher {
+    display: block
+}
+
+.icon-hd:before {
+    content: "\f114"!important;
+}
+
+.video-js.vjs-dash-hls-bitrate-switcher .remove-me,
+.video-js.vjs-dash-hls-bitrate-switcher .remove-me-too,
+.video-js.vjs-dash-hls-bitrate-switcher.finally-remove-me {
+    color: red;
+    font-size: 504px
+}
+
+.vjs-dash-hls-bitrate-switcher-menu .vjs-button {
+    font-size: 1.5em
+}
+
+.vjs-dash-hls-bitrate-switcher-menu .vjs-menu {
+    width: 20em;
+    left: -15em
+}
+
+.vjs-dash-hls-bitrate-switcher-menu .vjs-menu .vjs-menu-content {
+    border-radius: 5px
+}
+
+.vjs-dash-hls-bitrate-switcher-menu .vjs-menu li {
+    padding: 5px
+}
+
+.vjs-dash-hls-bitrate-switcher .vjs-stream-info {
+    position: absolute;
+    top: 10px;
+    left: 10px
+}
+
+.vjs-dash-hls-bitrate-switcher .vjs-stream-info .vjs-stream-info-box {
+    background: rgb(0 0 0/50%);
+    color: #fff;
+    padding: .5em;
+    width: auto;
+    font-size: 12px;
+    border-radius: 3px;
+    line-height: 16px
+}

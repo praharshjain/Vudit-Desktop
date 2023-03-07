@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/photoswipe.css">
+        <link rel="stylesheet" href="css/default-skin/default-skin.css">
+    </head>
+
+    <body>
+        <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="pswp__bg"></div>
+            <div class="pswp__scroll-wrap">
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+                <div class="pswp__ui pswp__ui--hidden">
+                    <div class="pswp__top-bar">
+                        <div class="pswp__counter"></div>
+                        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+                    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Core JS file -->
+        <script src="js/photoswipe.min.js"></script>
+        <!-- UI JS file -->
+        <script src="js/photoswipe-ui-default.min.js"></script>
+        <script src="js/tiff.js"></script>
+        <script>
+            let pswpElement = document.querySelectorAll('.pswp')[0];
+            // define options (if needed)
+            let options = {
+                index: 0,
+                history: false,
+                focus: false,
+                showAnimationDuration: 0,
+                hideAnimationDuration: 0,
+                allowPanToNext: false,
+                loop: false,
+                pinchToClose: false,
+                closeOnScroll: false,
+                closeOnVerticalDrag: false,
+                escKey: false,
+                arrowKeys: false,
+            };
+            let items = null;
+            function show() {
+                let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+                gallery.init();
+                gallery.listen('destroy', function () {
+                    window.location.reload();
+                });
+            }
+            function loadImage(filePath) {
+                let img = new Image();
+                img.onload = function () {
+                    items = [{
+                        src: filePath,
+                        w: img.width,
+                        h: img.height
+                    },];
+                    show();
+                }
+                img.src = filePath;
+            }
+            let filePath = common.getParameterByName('file');
+            let ext = common.getFileExt(filePath);
+            if (ext == "tif" || ext == "tiff") {
+                let xhr = new XMLHttpRequest();
+                xhr.responseType = 'arraybuffer';
+                xhr.open('GET', filePath);
+                xhr.onload = function (e) {
+                    let tiff = new Tiff({ buffer: xhr.response });
+                    filePath = tiff.toCanvas().toDataURL("image/png");
+                    loadImage(filePath);
+                };
+                xhr.send();
+            }
+            loadImage(filePath);
+
+        </script>
+    </body>
+
+</html>

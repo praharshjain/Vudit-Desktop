@@ -1,0 +1,42 @@
+<html>
+    <header>
+        <meta charset="utf-8">
+        <style>
+            body {
+                background: #000;
+                margin: 0;
+            }
+
+            #viewer {
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+    </header>
+
+    <body>
+        <div id="viewer"></div>
+        <script src="js/djvu.js"></script>
+        <script src="js/djvu_viewer.js"></script>
+        <script>
+            let filePath = common.getParameterByName('file');
+            let viewer = new DjVu.Viewer();
+            viewer.configure({
+                viewMode: 'continuous',
+                language: 'en',
+                theme: 'dark',
+                uiOptions: {
+                    hideFullPageSwitch: true,
+                    changePageOnScroll: true,
+                    showContentsAutomatically: true,
+                    hideOpenAndCloseButtons: true,
+                    hidePrintButton: false,
+                    hideSaveButton: true,
+                },
+            });
+            viewer.render(document.getElementById("viewer"));
+            viewer.loadDocumentByUrl(filePath);
+        </script>
+    </body>
+
+</html>

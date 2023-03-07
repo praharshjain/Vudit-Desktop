@@ -1,0 +1,75 @@
+.icon-holder,
+.icon-holder .icon {
+    min-width: 20px;
+    min-height: 20px;
+    width: 40px;
+    height: 40px;
+}
+
+#search-bar::before,
+#search-bar::after {
+    content: '\e803';
+}
+
+.hidden {
+    display: none;
+}
+
+.nav-group,
+.nav-group-title {
+    font-size: 20px;
+}
+
+.nav-group-item .icon {
+    margin-right: 20px;
+    font-size: 30px;
+    margin-top: -8px;
+}
+
+.drop-file {
+    margin-top: 30px;
+    border: 1px dashed #333;
+    height: 300px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.drop-file.active {
+    border: 2px solid #333;
+}
+
+#drop-file-text {
+    font-size: 20px;
+    font-weight: 300;
+    color: #333;
+    margin-top: -10px;
+}
+
+.drop-file span {
+    font-size: 14px;
+    font-weight: 300;
+    color: #333;
+    margin: 10px 0 15px 0;
+}
+
+#file-chooser {
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: 300;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    border: 1px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+#file-chooser:hover {
+    background-color: #333;
+    color: #fff;
+}

@@ -1,0 +1,30 @@
+<html>
+
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/easymde.css">
+    <link rel="stylesheet" href="css/highlight.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <script src="js/highlight.js"></script>
+    <script src="js/font-awesome.js"></script>
+    <script src="js/easymde.js"></script>
+    <textarea id="markdown-txt"></textarea>
+    <script>
+        const easyMDE = new EasyMDE({
+            lineNumbers: true,
+            sideBySideFullscreen: true,
+            renderingConfig: {
+                codeSyntaxHighlighting: true,
+            },
+            element: document.getElementById('markdown-txt'),
+        });
+        easyMDE.toggleSideBySide();
+        const filePath = common.getParameterByName('file');
+        fetch(filePath)
+            .then(function (response) {
+                response.text().then(function (text) {
+                    easyMDE.value(text);
+                });
+            });
+    </script>
+
+</html>

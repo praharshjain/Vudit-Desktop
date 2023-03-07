@@ -1,0 +1,47 @@
+<html style="background:#aaaaaa;">
+
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <script>
+            // Insert this line before all script imports
+            if (typeof module === 'object') {
+                window.module = module;
+                module = undefined;
+            }
+        </script>
+        <script src="script.js"></script>
+        <script>
+            const config = common.getConfig();
+            let zipEntries = common.ipcRenderer.sendSync('getZipEntries', common.getParameterByName('file'));
+            $(document).ready(function () {
+                $('#files').DataTable({
+                    data: zipEntries,
+                    responsive: true,
+                    paging: false,
+                    fixedHeader: { header: true, },
+                    columns: [
+                        { title: "Name" },
+                        { title: "Version" },
+                        { title: "Modified" },
+                        { title: "Compressed Size" },
+                        { title: "Original Size" },
+                        { title: "CRC" },
+                        { title: "Method" }
+                    ],
+                    columnDefs: [
+                        { type: 'file-size', targets: [5, 6] }]
+                });
+            });
+        </script>
+        <!-- Insert this line after script imports -->
+        <script>
+            if (window.module) module = window.module;
+        </script>
+    </head>
+
+    <body>
+        <table id="files" class="display" cellspacing="0" width="100%">
+        </table>
+    </body>
+
+</html>

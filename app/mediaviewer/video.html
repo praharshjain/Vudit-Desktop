@@ -1,0 +1,140 @@
+<html>
+
+    <head data-cast-api-enabled="true">
+        <title>Vudit</title>
+        <link rel="stylesheet" href="css/video-js.css" />
+        <link rel="stylesheet" href="css/contextmenu.css" />
+        <link rel="stylesheet" href="css/seek-buttons.css" />
+        <link rel="stylesheet" href="css/airplay.css" />
+        <link rel="stylesheet" href="css/chromecast.css" />
+        <link rel="stylesheet" href="css/skin.css" />
+        <link rel="stylesheet" href="css/zoom.css" />
+        <link rel="stylesheet" href="css/panorama.css" />
+        <link rel="stylesheet" href="css/quality-selector.css" />
+        <link rel="stylesheet" href="css/snapshot.css" />
+    </head>
+
+    <body style="background-color:#000;">
+        <video id="my-player" class="video-js vjs-fill vjs-v7" preload="auto" controls x-webkit-airplay="true"></video>
+        <script>
+            window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = { preloadWebComponents: true };
+            require('electron-chromecast');
+        </script>
+        <script src="js/video.js"></script>
+        <script src="js/airplay.js"></script>
+        <script src="js/chromecast.js"></script>
+        <script src="js/zoom.js"></script>
+        <script src="js/seek-buttons.js"></script>
+        <script src="js/contextmenu.js"></script>
+        <script src="js/three.js"></script>
+        <script src="js/panorama.js"></script>
+        <script src="js/streaming.js"></script>
+        <script src="js/flv.js"></script>
+        <script src="js/snapshot.js"></script>
+        <!-- conversion stuff -->
+        <script src="js/mux.min.js"></script>
+        <script src="js/ffmpeg.min.js"></script>
+        <script src="js/rxjs.umd.js"></script>
+        <script src="js/convert.js"></script>
+
+        <script>
+            const skipDuration = 10;
+            function handleError(e) {
+                //handle MEDIA_ERR_SRC_NOT_SUPPORTED
+                if (e.target.error.code == 4) {
+                    player.errorDisplay.close();
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    fallbackToConversion();
+                }
+            }
+            function fallbackToConversion() {
+                // ask user if they want to convert using ffmpeg
+                let convert = confirm('Playback for this media file is not supported, do you want to attempt to convert it and play?');
+                if (convert) {
+                    convertAndStream(filePath, mediaEle);
+                }
+            }
+            function enablePanoramaMode(player) {
+                if (vrEnabled) {
+                    return;
+                }
+                if (!player.mediainfo) {
+                    player.mediainfo = {};
+                }
+                if (!player.mediainfo.projection) {
+                    player.mediainfo.projection = '360';
+                }
+                player.panorama({
+                    PanoramaThumbnail: true,
+                    KeyboardControl: true,
+                    clickToToggle: true,
+                    clickAndDrag: true,
+                    VREnable: true,
+                });
+                vrEnabled = true;
+            }
+            let vrEnabled = false;
+            let filePath = common.getParameterByName('file');
+            let ext = common.getFileExt(filePath);
+            let mediaEle = document.getElementById('my-player');
+            //setup player
+            let playerOptions = {
+                responsive: true,
+                bigPlayButton: true,
+                techOrder: ['chromecast', 'html5'],
+                techCanOverridePoster: true,
+                playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+                userActions: { hotkeys: true },
+                controlBar: { pictureInPictureToggle: true },
+                html5: {
+                    dash: { useTTML: true },
+                    vhs: { overrideNative: true },
+                    nativeAudioTracks: false,
+                    nativeVideoTracks: false
+                },
+            };
+            // handle flv
+            if (ext == "flv") {
+                playerOptions.techOrder = ['chromecast', 'Flvjs', 'html5'];
+                playerOptions.flvjs = {
+                    mediaDataSource: {
+                        type: ext,
+                        isLive: false,
+                        cors: false,
+                        withCredentials: false,
+                    },
+                };
+            } else {
+                mediaEle.addEventListener("error", handleError);
+            }
+            let player = videojs('my-player', playerOptions, function () {
+                mediaEle.src = filePath;
+                player.load(filePath);
+                player.play();
+            });
+            player.zoomPlugin();
+            player.airplayButton();
+            player.qualityLevels();
+            player.snapshot();
+            player.dashHlsBitrateSwitcher({ showInfo: false, support: "both" });
+            player.seekButtons({ forward: skipDuration, back: skipDuration });
+            player.chromecast({ appId: 'Vudit', receiverAppID: 'Vudit', addButtonToControlBar: true });
+            player.contextmenuUI({
+                keepInside: true,
+                content: [{
+                    label: 'Panorama/360 Mode',
+                    listener: function () { enablePanoramaMode(player); },
+                }]
+            });
+            document.addEventListener("keydown", (e) => {
+                if (e.keyCode == 37) { //left arrow
+                    player.currentTime(player.currentTime() - skipDuration);
+                } else if (e.keyCode == 39) { //right arrow
+                    player.currentTime(player.currentTime() + skipDuration);
+                }
+            });
+        </script>
+    </body>
+
+</html>

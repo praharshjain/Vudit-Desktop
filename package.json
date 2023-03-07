@@ -1,0 +1,666 @@
+{
+    "name": "vudit",
+    "productName": "Vudit",
+    "version": "1.0.0",
+    "description": "A cross platform file viewer.",
+    "main": "app/main.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder",
+        "package": "electron-forge package",
+        "make": "electron-forge make"
+    },
+    "repository": "https://github.com/praharshjain/Electron-PDF-Viewer",
+    "keywords": [
+        "electron",
+        "filesystem",
+        "cross-platform",
+        "desktop-app",
+        "file",
+        "viewer",
+        "file-viewer",
+        "document-viewer",
+        "djvu",
+        "open documents",
+        "docx-viewer",
+        "ebpu-viewer",
+        "code-viewer",
+        "syntax-highlighter",
+        "markdown-preview",
+        "markdown-viewer",
+        "image-viewer",
+        "media-player",
+        "music-player",
+        "video-player",
+        "pdf-viewer",
+        "rtf-viewer",
+        "sqlite-viewer",
+        "treedoc-viewer",
+        "zip-viewer"
+    ],
+    "author": "Praharsh Jain",
+    "license": "MIT",
+    "website": "https://praharsh.tech",
+    "copyright": "Copyright © Praharsh Jain, 2023",
+    "devDependencies": {
+        "@electron-forge/cli": "^6.0.5",
+        "@electron-forge/maker-deb": "^6.0.5",
+        "@electron-forge/maker-rpm": "^6.0.5",
+        "@electron-forge/maker-squirrel": "^6.0.5",
+        "@electron-forge/maker-zip": "^6.0.5",
+        "@electron-forge/maker-dmg": "^6.0.5",
+        "@electron-forge/maker-pkg": "^6.0.5",
+        "@electron-forge/plugin-auto-unpack-natives": "^6.0.5",
+        "electron": "^23.1.2",
+        "electron-builder": "^23.6.0"
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.10",
+        "content-type-parser": "^1.0.2",
+        "electron-chrome-extensions": "^3.10.0",
+        "electron-chromecast": "^1.1.0",
+        "electron-is-dev": "2.0.0",
+        "electron-prompt": "^1.7.0",
+        "follow-redirects": "^1.15.2",
+        "mime-db": "^1.52.0",
+        "mime-lookup": "^0.0.2",
+        "v8-compile-cache": "^2.3.0"
+    },
+    "build": {
+        "appId": "com.praharsh.${name}",
+        "asar": false,
+        "afterPack": "./afterPackHook.js",
+        "compression": "maximum",
+        "copyright": "Copyright © Praharsh Jain, 2023",
+        "includePdb": true,
+        "icon": "icon.png",
+        "mac": {
+            "category": "public.app-category.utilities",
+            "target": "default",
+            "icon": "icon.png",
+            "type": "distribution"
+        },
+        "dmg": {
+            "icon": "app/icon.png"
+        },
+        "fileAssociations": [
+            {
+                "ext": "zip",
+                "name": "ZIP",
+                "icon": "app/icons/file_archive.svg",
+                "description": "ZIP archive",
+                "mimeType": "application/zip",
+                "role": "Viewer",
+                "rank": "Archives"
+            },
+            {
+                "ext": "rar",
+                "name": "RAR",
+                "icon": "app/icons/file_archive.svg",
+                "description": "RAR archive",
+                "mimeType": "application/vnd.rar",
+                "role": "Viewer",
+                "rank": "Archives"
+            },
+            {
+                "ext": "png",
+                "name": "PNG",
+                "icon": "app/icons/file_image.svg",
+                "description": "Portable Network Graphics",
+                "mimeType": "image/png",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "gif",
+                "name": "GIF",
+                "icon": "app/icons/file_image.svg",
+                "description": "Graphics Interchange Format",
+                "mimeType": "image/gif",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "jpg",
+                "name": "JPG",
+                "icon": "app/icons/file_image.svg",
+                "description": "Joint Photographic Experts Group Image",
+                "mimeType": "image/jpeg",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "jpeg",
+                "name": "JPEG",
+                "icon": "app/icons/file_image.svg",
+                "description": "Joint Photographic Experts Group Image",
+                "mimeType": "image/jpeg",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "webp",
+                "name": "WEBP",
+                "icon": "app/icons/file_image.svg",
+                "description": "Web Picture Format",
+                "mimeType": "image/webp",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "svg",
+                "name": "SVG",
+                "icon": "app/icons/file_image.svg",
+                "description": "Scalable Vector Graphics",
+                "mimeType": "image/svg+xml",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "bmp",
+                "name": "BMP",
+                "icon": "app/icons/file_image.svg",
+                "description": "Bitmap Graphics Image",
+                "mimeType": "image/bmp",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "ico",
+                "name": "ICO",
+                "icon": "app/icons/file_image.svg",
+                "description": "Icon Format",
+                "mimeType": "image/vnd.microsoft.icon",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "tif",
+                "name": "TIF",
+                "icon": "app/icons/file_image.svg",
+                "description": "Tag(ged) Image File Format",
+                "mimeType": "image/tiff",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "tiff",
+                "name": "TIFF",
+                "icon": "app/icons/file_image.svg",
+                "description": "Tag(ged) Image File Format",
+                "mimeType": "image/tiff",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "wmf",
+                "name": "WMF",
+                "icon": "app/icons/file_image.svg",
+                "description": "Windows Metafile",
+                "mimeType": "image/wmf",
+                "role": "Viewer",
+                "rank": "Images"
+            },
+            {
+                "ext": "mp3",
+                "name": "MP3",
+                "icon": "app/icons/file_music.svg",
+                "description": "MP3 Audio",
+                "mimeType": "audio/mpeg",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "m4a",
+                "name": "M4A",
+                "icon": "app/icons/file_music.svg",
+                "description": "MPEG-4 Audio",
+                "mimeType": "audio/mp4",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "wav",
+                "name": "WAV",
+                "icon": "app/icons/file_music.svg",
+                "description": "Waveform Audio Format",
+                "mimeType": "audio/wav",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "ogg",
+                "name": "OGG",
+                "icon": "app/icons/file_music.svg",
+                "description": "Ogg Vorbis Audio",
+                "mimeType": "audio/ogg",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "oga",
+                "name": "OGA",
+                "icon": "app/icons/file_music.svg",
+                "description": "Ogg Vorbis Audio",
+                "mimeType": "audio/ogg",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "opus",
+                "name": "OPUS",
+                "icon": "app/icons/file_music.svg",
+                "description": "Opus format",
+                "mimeType": "audio/ogg",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "ogm",
+                "name": "OGM",
+                "icon": "app/icons/file_music.svg",
+                "description": "Ogg Vorbis Audio",
+                "mimeType": "application/ogg",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "flac",
+                "name": "FLAC",
+                "icon": "app/icons/file_music.svg",
+                "description": "Free Lossless Audio Codec",
+                "mimeType": "audio/x-flac",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "aac",
+                "name": "AAC",
+                "icon": "app/icons/file_music.svg",
+                "description": "Advanced Audio Coding",
+                "mimeType": "audio/aac",
+                "role": "Viewer",
+                "rank": "Audio"
+            },
+            {
+                "ext": "mp4",
+                "name": "MP4",
+                "icon": "app/icons/file_video.svg",
+                "description": "MP4 Video",
+                "mimeType": "video/mp4",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "mpeg",
+                "name": "MPEG",
+                "icon": "app/icons/file_video.svg",
+                "description": "MPEG Video",
+                "mimeType": "video/mpeg",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "m4v",
+                "name": "M4V",
+                "icon": "app/icons/file_video.svg",
+                "description": "M4V Video",
+                "mimeType": "video/x-m4v",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "mkv",
+                "name": "MKV",
+                "icon": "app/icons/file_video.svg",
+                "description": "Matroska Video",
+                "mimeType": "video/x-matroska",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "ogv",
+                "name": "OGV",
+                "icon": "app/icons/file_video.svg",
+                "description": "OGG Video",
+                "mimeType": "video/ogg",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "webm",
+                "name": "WEBM",
+                "icon": "app/icons/file_video.svg",
+                "description": "Web Media File",
+                "mimeType": "video/webm",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "3gp",
+                "name": "3GP",
+                "icon": "app/icons/file_video.svg",
+                "description": "3GP file",
+                "mimeType": "video/3gpp",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "mov",
+                "name": "MOV",
+                "icon": "app/icons/file_video.svg",
+                "description": "Quicktime Video",
+                "mimeType": "video/quicktime",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "flv",
+                "name": "FLV",
+                "icon": "app/icons/file_video.svg",
+                "description": "Macromedia Flash Video",
+                "mimeType": "video/x-flv",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "m3u",
+                "name": "M3U",
+                "icon": "app/icons/file_video.svg",
+                "description": "HTTP Live Streaming (HLS)",
+                "mimeType": "application/x-mpegURL",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "m3u8",
+                "name": "M3U8",
+                "icon": "app/icons/file_video.svg",
+                "description": "HTTP Live Streaming (HLS)",
+                "mimeType": "application/x-mpegURL",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "mpd",
+                "name": "MPD",
+                "icon": "app/icons/file_video.svg",
+                "description": "MPEG-DASH",
+                "mimeType": "application/dash+xml",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "swf",
+                "name": "SWF",
+                "icon": "app/icons/file_video.svg",
+                "description": "Shockwave FLash",
+                "mimeType": "application/x-shockwave-flash",
+                "role": "Viewer",
+                "rank": "Video"
+            },
+            {
+                "ext": "md",
+                "name": "MD",
+                "icon": "app/icons/file_code.svg",
+                "description": "Markdown",
+                "mimeType": "text/markdown",
+                "role": "Viewer",
+                "rank": "Markdown"
+            },
+            {
+                "ext": "mkd",
+                "name": "MKD",
+                "icon": "app/icons/file_code.svg",
+                "description": "Markdown",
+                "mimeType": "text/markdown",
+                "role": "Viewer",
+                "rank": "Markdown"
+            },
+            {
+                "ext": "mkdn",
+                "name": "MKDN",
+                "icon": "app/icons/file_code.svg",
+                "description": "Markdown",
+                "mimeType": "text/markdown",
+                "role": "Viewer",
+                "rank": "Markdown"
+            },
+            {
+                "ext": "mdwn",
+                "name": "MDWN",
+                "icon": "app/icons/file_code.svg",
+                "description": "Markdown",
+                "mimeType": "text/markdown",
+                "role": "Viewer",
+                "rank": "Markdown"
+            },
+            {
+                "ext": "mdown",
+                "name": "MDOWN",
+                "icon": "app/icons/file_code.svg",
+                "description": "Markdown",
+                "mimeType": "text/markdown",
+                "role": "Viewer",
+                "rank": "Markdown"
+            },
+            {
+                "ext": "markdown",
+                "name": "MARKDOWN",
+                "icon": "app/icons/file_code.svg",
+                "description": "Markdown",
+                "mimeType": "text/markdown",
+                "role": "Viewer",
+                "rank": "Markdown"
+            },
+            {
+                "ext": "json",
+                "name": "JSON",
+                "icon": "app/icons/file_code.svg",
+                "description": "Javascript Object Notation",
+                "mimeType": "application/json",
+                "role": "Viewer",
+                "rank": "TreeDoc"
+            },
+            {
+                "ext": "xml",
+                "name": "XML",
+                "icon": "app/icons/file_code.svg",
+                "description": "Extensible Markup Language",
+                "mimeType": "application/xml",
+                "role": "Viewer",
+                "rank": "TreeDoc"
+            },
+            {
+                "ext": "fxml",
+                "name": "FXML",
+                "icon": "app/icons/file_code.svg",
+                "description": "FX Markup Language",
+                "mimeType": "text/xml",
+                "role": "Viewer",
+                "rank": "TreeDoc"
+            },
+            {
+                "ext": "yaml",
+                "name": "YAML",
+                "icon": "app/icons/file_code.svg",
+                "description": "Yet Another Markup Language",
+                "mimeType": "text/yaml",
+                "role": "Viewer",
+                "rank": "TreeDoc"
+            },
+            {
+                "ext": "csv",
+                "name": "CSV",
+                "icon": "app/icons/file_code.svg",
+                "description": "Comma-Separated Values",
+                "mimeType": "text/csv",
+                "role": "Viewer",
+                "rank": "TreeDoc"
+            },
+            {
+                "ext": "rtf",
+                "name": "RTF",
+                "icon": "app/icons/file_rtf.svg",
+                "description": "Rich Text Format",
+                "mimeType": "application/rtf",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "pdf",
+                "name": "PDF",
+                "icon": "app/icons/file_pdf.svg",
+                "description": "Portable Document Format",
+                "mimeType": "application/pdf",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "djv",
+                "name": "DjVu",
+                "icon": "app/icons/file_default.svg",
+                "description": "DjVu File",
+                "mimeType": "image/x-djvu",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "djvu",
+                "name": "DjVu",
+                "icon": "app/icons/file_default.svg",
+                "description": "DjVu File",
+                "mimeType": "image/vnd.djvu",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "epub",
+                "name": "EPub",
+                "icon": "app/icons/file_epub.svg",
+                "description": "Electronic Publication File",
+                "mimeType": "application/epub+zip",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "opf",
+                "name": "OPF",
+                "icon": "app/icons/file_epub.svg",
+                "description": "Open Packaging Format",
+                "mimeType": "application/oebps-package+xml",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "odt",
+                "name": "ODT",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Document",
+                "mimeType": "application/vnd.oasis.opendocument.text",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "ott",
+                "name": "OTT",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenDocument Document Template",
+                "mimeType": "application/vnd.oasis.opendocument.text-template",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "odp",
+                "name": "ODP",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Presentation Document",
+                "mimeType": "application/vnd.oasis.opendocument.presentation",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "otp",
+                "name": "OTP",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Presentation Document Template",
+                "mimeType": "application/vnd.oasis.opendocument.presentation-template",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "ods",
+                "name": "ODS",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Spreadsheet Document",
+                "mimeType": "application/vnd.oasis.opendocument.spreadsheet",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "ots",
+                "name": "OTS",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Spreadsheet Document Template",
+                "mimeType": "application/vnd.oasis.opendocument.spreadsheet-template",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "fodt",
+                "name": "FODT",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Document Flat XML Format",
+                "mimeType": "application/vnd.oasis.opendocument.text",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "fods",
+                "name": "FODS",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Spreadsheet Document Flat XML Format",
+                "mimeType": "application/vnd.oasis.opendocument.spreadsheet",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "fodp",
+                "name": "FODP",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Presentation Document Flat XML Format",
+                "mimeType": "application/vnd.oasis.opendocument.presentation",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "fodp",
+                "name": "FODP",
+                "icon": "app/icons/file_default.svg",
+                "description": "OpenOffice Presentation Document Flat XML Format",
+                "mimeType": "application/vnd.oasis.opendocument.presentation",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "docx",
+                "name": "DOCX",
+                "icon": "app/icons/file_default.svg",
+                "description": "Microsoft Word Document",
+                "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "sqlite",
+                "name": "SQLite",
+                "icon": "app/icons/file_default.svg",
+                "description": "SQLite database",
+                "mimeType": "application/vnd.sqlite3",
+                "role": "Viewer",
+                "rank": "Documents"
+            }
+        ]
+    }
+}
