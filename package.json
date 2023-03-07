@@ -21,8 +21,8 @@
         "viewer",
         "file-viewer",
         "document-viewer",
-        "djvu",
-        "open documents",
+        "djvu-viewer",
+        "open-document-viewer",
         "docx-viewer",
         "ebpu-viewer",
         "code-viewer",
@@ -36,6 +36,7 @@
         "pdf-viewer",
         "rtf-viewer",
         "sqlite-viewer",
+        "swf-viewer",
         "treedoc-viewer",
         "zip-viewer"
     ],
