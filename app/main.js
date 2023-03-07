@@ -5,10 +5,10 @@ const fs = require('fs');
 const path = require('path');
 const admZip = require('adm-zip');
 const { https } = require('follow-redirects');
-const contentTypeParser = require("content-type-parser");
+const MimeTypeParser = require("whatwg-mimetype");;
 const mimeLookup = require('mime-lookup');
-const isDev = require('electron-is-dev');
 const mime = new mimeLookup(require('mime-db'));
+const isDev = require('electron-is-dev');
 const prompt = require('electron-prompt');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 const { app, shell, Menu, Tray, dialog, ipcMain, crashReporter, BrowserWindow, session, nativeImage } = require('electron');
@@ -405,7 +405,7 @@ function openFile(path) {
   //try to read content type from headers
   if (path.startsWith('http')) {
     https.request(path, { method: 'HEAD' }, (res) => {
-      let contentType = contentTypeParser(res.headers['content-type']);
+      let contentType = new MimeTypeParser(res.headers['content-type']);
       mimeType = contentType.type + '/' + contentType.subtype;
       viewerURL = getViewerURLByType(path, mime.extension(mimeType), mimeType);
       if (viewerURL != '') {

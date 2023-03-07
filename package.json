@@ -11,7 +11,7 @@
         "package": "electron-forge package",
         "make": "electron-forge make"
     },
-    "repository": "https://github.com/praharshjain/Electron-PDF-Viewer",
+    "repository": "https://github.com/praharshjain/Vudit-Desktop",
     "keywords": [
         "electron",
         "filesystem",
@@ -58,7 +58,6 @@
     },
     "dependencies": {
         "adm-zip": "^0.5.10",
-        "content-type-parser": "^1.0.2",
         "electron-chrome-extensions": "^3.10.0",
         "electron-chromecast": "^1.1.0",
         "electron-is-dev": "2.0.0",
@@ -66,7 +65,8 @@
         "follow-redirects": "^1.15.2",
         "mime-db": "^1.52.0",
         "mime-lookup": "^0.0.2",
-        "v8-compile-cache": "^2.3.0"
+        "v8-compile-cache": "^2.3.0",
+        "whatwg-mimetype": "^3.0.0"
     },
     "build": {
         "appId": "com.praharsh.${name}",
