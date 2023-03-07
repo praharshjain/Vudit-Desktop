@@ -8,6 +8,7 @@
         "start": "electron-forge start",
         "pack": "electron-builder --dir",
         "dist": "electron-builder",
+        "dist-all": "electron-builder -mlw",
         "package": "electron-forge package",
         "make": "electron-forge make"
     },
@@ -69,7 +70,7 @@
         "whatwg-mimetype": "^3.0.0"
     },
     "build": {
-        "appId": "com.praharsh.${name}",
+        "appId": "com.praharsh.vudit",
         "asar": false,
         "afterPack": "./afterPackHook.js",
         "compression": "maximum",
