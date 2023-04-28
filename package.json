@@ -44,8 +44,8 @@
     "website": "https://praharsh.tech",
     "copyright": "Copyright © Praharsh Jain, 2023",
     "devDependencies": {
-        "electron": "^24.0.0",
-        "electron-builder": "^24.2.0"
+        "electron": "^24.1.3",
+        "electron-builder": "^24.3.0"
     },
     "dependencies": {
         "adm-zip": "^0.5.10",
