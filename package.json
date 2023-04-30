@@ -610,6 +610,24 @@
                 "rank": "Documents"
             },
             {
+                "ext": "tex",
+                "name": "TEX",
+                "icon": "app/icons/file_default.svg",
+                "description": "Lamport's TeX (LaTeX)",
+                "mimeType": "application/x-tex",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
+                "ext": "latex",
+                "name": "LATEX",
+                "icon": "app/icons/file_default.svg",
+                "description": "Lamport's TeX (LaTeX)",
+                "mimeType": "application/x-latex",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
                 "ext": "fodt",
                 "name": "FODT",
                 "icon": "app/icons/file_default.svg",

@@ -44,7 +44,6 @@ let txtExt = [
     'sql',
     'srt',
     'sub',
-    'tex',
     'txt',
     'vb',
     'vbs',
@@ -104,6 +103,8 @@ fileTypeMap['epub'].url = '/epubviewer/index.html?file=';
 fileTypeMap['opf'].url = '/epubviewer/index.html?file=';
 fileTypeMap['rtf'].url = '/rtfviewer/index.html?file=';
 fileTypeMap['wmf'].url = '/rtfviewer/index.html?file=';
+fileTypeMap['tex'].url = '/latexviewer/index.html?file=';
+fileTypeMap['latex'].url = '/latexviewer/index.html?file=';
 fileTypeMap['djv'].url = '/djvuviewer/index.html?file=';
 fileTypeMap['djvu'].url = '/djvuviewer/index.html?file=';
 fileTypeMap['docx'].url = '/docxviewer/index.html?file=';
