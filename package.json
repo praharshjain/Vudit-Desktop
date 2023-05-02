@@ -522,7 +522,7 @@
             {
                 "ext": "djv",
                 "name": "DjVu",
-                "icon": "app/icons/file_default.svg",
+                "icon": "app/icons/file_djvu.svg",
                 "description": "DjVu File",
                 "mimeType": "image/x-djvu",
                 "role": "Viewer",
@@ -531,7 +531,7 @@
             {
                 "ext": "djvu",
                 "name": "DjVu",
-                "icon": "app/icons/file_default.svg",
+                "icon": "app/icons/file_djvu.svg",
                 "description": "DjVu File",
                 "mimeType": "image/vnd.djvu",
                 "role": "Viewer",
