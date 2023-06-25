@@ -76,3 +76,8 @@ Screenshots
 <img src="https://github.com/praharshjain/Vudit-Desktop/blob/master/screenshots/8.png" width="500"> &nbsp;&nbsp;&nbsp;
 <img src="https://github.com/praharshjain/Vudit-Desktop/blob/master/screenshots/9.png" width="500"> &nbsp;&nbsp;&nbsp;
 <img src="https://github.com/praharshjain/Vudit-Desktop/blob/master/screenshots/10.png" width="500"> &nbsp;&nbsp;&nbsp;
+
+
+License
+----------------
+MIT
