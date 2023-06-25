@@ -628,6 +628,15 @@
                 "rank": "Documents"
             },
             {
+                "ext": "ipynb",
+                "name": "IPYNB",
+                "icon": "app/icons/file_default.svg",
+                "description": "Jupyter/Python Notebook",
+                "mimeType": "application/x-ipynb+json",
+                "role": "Viewer",
+                "rank": "Documents"
+            },
+            {
                 "ext": "fodt",
                 "name": "FODT",
                 "icon": "app/icons/file_default.svg",

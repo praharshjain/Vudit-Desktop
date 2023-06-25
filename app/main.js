@@ -462,42 +462,42 @@ function createZipEntry(obj) {
 function listFiles(dirPath) {
   let files = fs.readdirSync(dirPath);
   if (!files) {
-      return;
+    return;
   }
   let filesArr = [];
   if (dirPath != '/') {
-      filesArr.push({ name: '..', path: path.join(dirPath, '/../'), isDir: true, isFile: false, isSymLink: false, isBackLink: true });
+    filesArr.push({ name: '..', path: path.join(dirPath, '/../'), isDir: true, isFile: false, isSymLink: false, isBackLink: true });
   }
   files.forEach(file => {
-      let fullPath = path.join(dirPath, file);
-      if (!fs.existsSync(fullPath)) {
-          return
-      }
-      let f = fs.statSync(fullPath);
-      let fileObj = {
-          name: file,
-          path: fullPath,
-          parent: dirPath,
-          isDir: f.isDirectory(),
-          isFile: f.isFile(),
-          isSymLink: f.isSymbolicLink(),
-          isBackLink: false,
-          mTime: f.mtime,
-          size: f.size,
-      }
-      filesArr.push(fileObj);
+    let fullPath = path.join(dirPath, file);
+    if (!fs.existsSync(fullPath)) {
+      return
+    }
+    let f = fs.statSync(fullPath);
+    let fileObj = {
+      name: file,
+      path: fullPath,
+      parent: dirPath,
+      isDir: f.isDirectory(),
+      isFile: f.isFile(),
+      isSymLink: f.isSymbolicLink(),
+      isBackLink: false,
+      mTime: f.mtime,
+      size: f.size,
+    }
+    filesArr.push(fileObj);
   });
   return sortFiles(filesArr);
 }
 
 function sortFiles(filesArr) {
   filesArr.sort(function (a, b) {
-      if (a.isDir && !b.isDir) {
-          return -1;
-      } else if (!a.isDir && b.isDir) {
-          return 1;
-      }
-      return a.name < b.name;
+    if (a.isDir && !b.isDir) {
+      return -1;
+    } else if (!a.isDir && b.isDir) {
+      return 1;
+    }
+    return a.name < b.name;
   });
   return filesArr;
 }

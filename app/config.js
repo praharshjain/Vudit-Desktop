@@ -108,6 +108,7 @@ fileTypeMap['latex'].url = '/latexviewer/index.html?file=';
 fileTypeMap['djv'].url = '/djvuviewer/index.html?file=';
 fileTypeMap['djvu'].url = '/djvuviewer/index.html?file=';
 fileTypeMap['docx'].url = '/docxviewer/index.html?file=';
+fileTypeMap['ipynb'].url = '/ipynbviewer/index.html?file=';
 fileTypeMap['sqlite'].url = '/sqliteviewer/index.html?file=';
 
 
