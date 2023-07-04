@@ -178,6 +178,9 @@ app.on('ready', function () {
   ipcMain.on('getZipEntries', (e, path) => {
     e.returnValue = getZipEntries(path);
   });
+  ipcMain.on('getPreviewURL', (e, path) => {
+    e.returnValue = getPreviewURL(path);
+  });
   //hide splash screen randomly after 2-3 seconds
   setTimeout(createMainWindow, (Math.random() + 2) * 1000);
 });
@@ -263,6 +266,7 @@ function createMainWindow() {
       backgroundThrottling: false,
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
+      nodeIntegrationInSubFrames: true,
       contextIsolation: false,
       preload: path.join(__dirname, 'functions.js'),
       defaultEncoding: 'UTF-8'
@@ -418,6 +422,18 @@ function openFile(path) {
   } else {
     showUnsupportedDialog();
   }
+}
+
+
+function getPreviewURL(path) {
+  if (path == '') {
+    return '';
+  }
+  filepath = path;
+  //preference to extension/mime first
+  let ext = fn.getFileExt(path);
+  let mimeType = mime.lookup(path);
+  return getViewerURLByType(path, ext, mimeType);
 }
 
 function showUnsupportedDialog() {

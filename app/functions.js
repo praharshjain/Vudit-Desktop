@@ -49,10 +49,13 @@ function fileNameToIcon(path) {
 function openFile(path) {
     ipcRenderer.invoke('openFile', path);
 }
+function getPreviewURL(path) {
+    return ipcRenderer.sendSync('getPreviewURL', path);
+}
 
 function getConfig() {
     let config = null;
-    if(ipcRenderer) {
+    if (ipcRenderer) {
         //from rendered process
         config = ipcRenderer.sendSync('getConfig');
         config = JSON.parse(config);
@@ -96,6 +99,7 @@ let common = {
     getConfig: getConfig,
     getFileExt: getFileExt,
     ipcRenderer: ipcRenderer,
+    getPreviewURL: getPreviewURL,
     fileNameToIcon: fileNameToIcon,
     getReadableSize: getReadableSize,
     getParameterByName: getParameterByName,

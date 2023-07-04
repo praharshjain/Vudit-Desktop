@@ -2,7 +2,8 @@
 const dropArea = document.querySelector(".drop-file"),
     dragText = document.getElementById("drop-file-text"),
     button = document.getElementById("file-chooser"),
-    input = document.getElementById("file-input");
+    input = document.getElementById("file-input"),
+    previewFrame = document.getElementById('preview-file');
 button.onclick = () => { input.click() }
 input.addEventListener("change", function () {
     dropArea.classList.add("active");
@@ -76,12 +77,14 @@ function getRow(fileObj) {
         tr.setAttribute('onclick', 'showFiles("' + fileObj.path + '")');
     }
     else if (fileObj.isFile) {
-        tr.setAttribute('onclick', 'common.openFile("' + fileObj.path + '")');
+        tr.setAttribute('onclick', 'previewFile("' + fileObj.path + '")');
+        tr.setAttribute('ondblclick', 'common.openFile("' + fileObj.path + '")');
     }
     return tr;
 }
 
 function showFiles(dirPath) {
+    previewFrame.src = '';
     searchBar.value = '';
     currentDir = dirPath;
     footer.innerText = dirPath;
@@ -93,7 +96,13 @@ function showFiles(dirPath) {
     });
 }
 
+function previewFile(path) {
+    let url = common.getPreviewURL(path);
+    previewFrame.src = url;
+}
+
 function filterFiles(e) {
+    previewFrame.src = '';
     let query = e.target.value;
     let listItems = document.getElementsByClassName('file-name');
     for (let i = 0; i < listItems.length; i++) {
