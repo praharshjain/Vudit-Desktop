@@ -44,7 +44,7 @@ Supported file types and extensions -
 
 6. Text files and code files (with syntax highlighting):
     
-    "ascii", "asm", "awk", "bash", "bat", "bf", "bsh", "c", "cert", "cgi", "clj", "conf", "cpp", "cs", "css", "elr", "go", "h", "hs", "htaccess", "htm", "html", "ini", "java", "js", "key", "lisp", "log", "lua", "md", "mkdn", "pem", "php", "pl", "py", "rb", "readme", "scala", "sh", "sql", "srt", "sub", "tex", "txt", "vb", "vbs", "vhdl", "wollok", "xsd", "xsl", "iml", "gitignore", "gradle"  
+    "ascii", "asm", "awk", "bash", "bat", "bf", "bsh", "c", "cert", "cgi", "clj", "conf", "cpp", "cs", "css", "elr", "go", "h", "hs", "htaccess", "htm", "html", "ini", "java", "js", "key", "lisp", "log", "lua", "md", "mkdn", "pem", "php", "pl", "py", "rb", "readme", "scala", "sh", "sql", "srt", "sub", "tex", "toml", "txt", "vb", "vbs", "vhdl", "wollok", "xsd", "xsl", "iml", "gitignore", "gradle"  
     
 7. Any other file with mime type text
 
