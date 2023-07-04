@@ -34,7 +34,7 @@ Supported file types and extensions -
     
     Open document formats - "odt", "ott", "odp", "otp", "ods", "ots", "fodt", "fods", "fodp"  
     
-    Other formats: "pdf", "rtf", "djv", "djvu", "epub", "opf", "docx", "tex", "latex"
+    Other formats: "pdf", "rtf", "djv", "djvu", "epub", "opf", "docx", "tex", "latex", "ipynb"
     
 3. Treedoc files: (with tree and table view): "json", "xml", "fxml", "yaml", "csv"
 
