@@ -5,7 +5,7 @@ function getFileExt(filePath) {
     return filePath.substring(filePath.lastIndexOf('.') + 1, filePath.length).toLowerCase().trim();
 }
 
-function getType(fileObj) {
+function getKind(fileObj) {
     if (fileObj.isBackLink) {
         return '-';
     }
@@ -93,7 +93,7 @@ function getReadableSize(fileObj) {
 }
 
 let common = {
-    getType: getType,
+    getKind: getKind,
     getIcon: getIcon,
     openFile: openFile,
     getConfig: getConfig,

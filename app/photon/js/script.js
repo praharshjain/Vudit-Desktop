@@ -60,8 +60,11 @@ function getRow(fileObj) {
     name.setAttribute('class', 'file-name');
     tr.appendChild(name);
     let kind = document.createElement('td');
-    kind.innerText = common.getType(fileObj);
+    kind.innerText = common.getKind(fileObj);
     tr.appendChild(kind);
+    let type = document.createElement('td');
+    type.innerText = fileObj.type;
+    tr.appendChild(type);
     let size = document.createElement('td');
     size.innerText = common.getReadableSize(fileObj);
     tr.appendChild(size);

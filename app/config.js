@@ -45,6 +45,7 @@ let txtExt = [
     'srt',
     'sub',
     'txt',
+    'toml',
     'vb',
     'vbs',
     'vhdl',

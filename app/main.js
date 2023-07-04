@@ -482,7 +482,7 @@ function listFiles(dirPath) {
   }
   let filesArr = [];
   if (dirPath != '/') {
-    filesArr.push({ name: '..', path: path.join(dirPath, '/../'), isDir: true, isFile: false, isSymLink: false, isBackLink: true });
+    filesArr.push({ name: '..', path: path.join(dirPath, '/../'), isDir: true, isFile: false, isSymLink: false, isBackLink: true, type: '--' });
   }
   files.forEach(file => {
     let fullPath = path.join(dirPath, file);
@@ -500,6 +500,19 @@ function listFiles(dirPath) {
       isBackLink: false,
       mTime: f.mtime,
       size: f.size,
+    }
+    if (fileObj.isFile) {
+      fileObj.ext = fn.getFileExt(fullPath);
+      fileObj.mimeType = mime.lookup(fullPath);
+      if (fileObj.ext in config.fileTypeMap) {
+        fileObj.type = config.fileTypeMap[fileObj.ext].description;
+      } else if (fileObj.mimeType in config.fileTypeMap) {
+        fileObj.type = config.fileTypeMap[fileObj.mimeType].description;
+      } else {
+        fileObj.type = 'Unsupported';
+      }
+    } else {
+      fileObj.type = '--';
     }
     filesArr.push(fileObj);
   });
