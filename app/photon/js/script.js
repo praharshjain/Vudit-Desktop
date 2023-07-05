@@ -3,7 +3,10 @@ const dropArea = document.querySelector(".drop-file"),
     dragText = document.getElementById("drop-file-text"),
     button = document.getElementById("file-chooser"),
     input = document.getElementById("file-input"),
-    previewFrame = document.getElementById('preview-file');
+    previewFrame = document.getElementById('preview-file'),
+    filesTable = document.getElementById('files-table'),
+    gridViewBtn = document.getElementById('enable-grid-view'),
+    listViewBtn = document.getElementById('enable-list-view');
 button.onclick = () => { input.click() }
 input.addEventListener("change", function () {
     dropArea.classList.add("active");
@@ -67,6 +70,7 @@ function getRow(fileObj) {
     tr.appendChild(type);
     let size = document.createElement('td');
     size.innerText = common.getReadableSize(fileObj);
+    size.setAttribute('class', 'file-size');
     tr.appendChild(size);
     let time = document.createElement('td');
     time.innerText = fileObj.isBackLink ? '-' : fileObj.mTime.toString();
@@ -100,8 +104,7 @@ function showFiles(dirPath) {
 }
 
 function previewFile(path) {
-    let url = common.getPreviewURL(path);
-    previewFrame.src = url;
+    previewFrame.src = common.getPreviewURL(path);;
 }
 
 function filterFiles(e) {
@@ -115,4 +118,16 @@ function filterFiles(e) {
             listItems[i].parentNode.classList.add('hidden');
         }
     }
+}
+
+function listView() {
+    filesTable.classList.remove('grid-view');
+    gridViewBtn.classList.remove('active');
+    listViewBtn.classList.add('active');
+}
+
+function gridView() {
+    filesTable.classList.add('grid-view');
+    listViewBtn.classList.remove('active');
+    gridViewBtn.classList.add('active');
 }

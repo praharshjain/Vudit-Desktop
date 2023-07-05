@@ -79,3 +79,34 @@
     height: 100%;
     border: none;
 }
+
+table.grid-view th,
+table.grid-view #backlink {
+    display: none;
+}
+
+table.grid-view td.file-size,
+table.grid-view td.file-name,
+table.grid-view td.icon-holder {
+    display: grid;
+}
+
+table.grid-view td {
+    display: none;
+    text-align: center;
+}
+
+table.grid-view tr {
+    float: left;
+    min-width: 150px;
+}
+
+table.grid-view tr:nth-child(even) {
+    background-color: #fff;
+}
+
+table.grid-view .icon-holder,
+table.grid-view .icon-holder .icon {
+    width: 100%;
+    height: 80px;
+}

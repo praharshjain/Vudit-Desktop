@@ -32,6 +32,15 @@
             <button class="btn btn-default btn-large" title="Refresh" onclick="showFiles(currentDir)">
               <span class="icon icon-arrows-ccw"></span>
             </button>
+          </div>
+          <div class="btn-group btn-large">
+            <button id="enable-grid-view" class="btn btn-default btn-large" title="List View" onclick="gridView()">
+              <span class="icon icon-layout"></span>
+            </button>
+            <button id="enable-list-view" class="btn btn-default btn-large active" title="Grid View"
+              onclick="listView()">
+              <span class="icon icon-menu"></span>
+            </button>
             <!--
             <button class="btn btn-default btn-large">
               <span class="icon icon-info-circled"></span>
@@ -67,7 +76,7 @@
             </div>
           </div>
           <div class="pane">
-            <table class="table-striped">
+            <table id="files-table" class="table-striped">
               <thead>
                 <tr>
                   <th class='icon-holder'></th>
