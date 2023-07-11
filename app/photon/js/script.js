@@ -1,32 +1,7 @@
-//file drop support
-const dropArea = document.querySelector(".drop-file"),
-    dragText = document.getElementById("drop-file-text"),
-    button = document.getElementById("file-chooser"),
-    input = document.getElementById("file-input"),
-    previewFrame = document.getElementById('preview-file'),
+const previewFrame = document.getElementById('preview-file'),
     filesTable = document.getElementById('files-table'),
     gridViewBtn = document.getElementById('enable-grid-view'),
     listViewBtn = document.getElementById('enable-list-view');
-button.onclick = () => { input.click() }
-input.addEventListener("change", function () {
-    dropArea.classList.add("active");
-    let file = this.files[0];
-    common.openFile(file.path);
-});
-dropArea.addEventListener("dragover", (event) => {
-    event.preventDefault();
-    dropArea.classList.add("active");
-    dragText.textContent = "Release to Open File";
-});
-dropArea.addEventListener("dragleave", () => {
-    dropArea.classList.remove("active");
-    dragText.textContent = "Drag it here to Open";
-});
-dropArea.addEventListener("drop", (event) => {
-    event.preventDefault();
-    let file = event.dataTransfer.files[0];
-    common.openFile(file.path);
-});
 
 //file listing stuff
 const tableBody = document.getElementById('files-list');

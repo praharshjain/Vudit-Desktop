@@ -10,12 +10,14 @@ const mimeLookup = require('mime-lookup');
 const mime = new mimeLookup(require('mime-db'));
 const isDev = require('electron-is-dev');
 const prompt = require('electron-prompt');
+const { menubar } = require('menubar');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
-const { app, shell, Menu, Tray, dialog, ipcMain, crashReporter, BrowserWindow, session, nativeImage } = require('electron');
+const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, session, nativeImage } = require('electron');
 const options = { extraHeaders: 'pragma: no-cache\n' };
 const appIcon = nativeImage.createFromPath(config.iconPath);
-const trayIcon = appIcon.resize({ width: 20, height: 20 });
-let mainWindow, splashWindow;
+const startURL = 'file://' + __dirname + '/photon/index.html';
+const dropURL = 'file://' + __dirname + '/photon/drop.html';
+let mainWindow, splashWindow, mb;
 let contextMenu = null;
 let filepath = null;
 
@@ -65,7 +67,7 @@ const menuBarTemplate = [
         accelerator: 'Shift+CmdOrCtrl+Z',
         click: function (item, focusedWindow) {
           if (focusedWindow) {
-            focusedWindow.loadURL('file://' + __dirname + '/photon/index.html', options);
+            focusedWindow.loadURL(startURL, options);
           }
         },
       },
@@ -149,16 +151,7 @@ forceSingleInstance();
 
 app.on('ready', function () {
   showSplashWindow();
-  let tray = new Tray(trayIcon);
-  contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
-  tray.setToolTip(config.appName);
-  tray.setContextMenu(contextMenu);
   Menu.setApplicationMenu(menu);
-  //for OS-X
-  if (app.dock) {
-    app.dock.setIcon(appIcon);
-    app.dock.setMenu(contextMenu);
-  }
   // ipc stuff
   ipcMain.handle('openFile', (e, path) => {
     openFile(path);
@@ -180,6 +173,62 @@ app.on('ready', function () {
   });
   ipcMain.on('getPreviewURL', (e, path) => {
     e.returnValue = getPreviewURL(path);
+  });
+
+  //setup tray icon
+  mbWebPreferences = {
+    devTools: isDev,
+    plugins: true,
+    scrollBounce: true,
+    backgroundThrottling: false,
+    nodeIntegration: true,
+    nodeIntegrationInWorker: true,
+    nodeIntegrationInSubFrames: true,
+    contextIsolation: false,
+    preload: path.join(__dirname, 'functions.js'),
+    defaultEncoding: 'UTF-8'
+  };
+  mb = menubar({
+    index: dropURL,
+    icon: appIcon.resize({ width: 20, height: 20 }),
+    tooltip: config.appName,
+    preloadWindow: true,
+    showDockIcon: true,
+    webPreferences: mbWebPreferences,
+    browserWindow: {
+      minWidth: 200,
+      minHeight: 300,
+      movable: false,
+      show: false,
+      alwaysOnTop: true,
+      fullscreenable: false,
+      frame: false,
+      webPreferences: mbWebPreferences,
+    },
+  });
+  mb.on('ready', () => {
+    let tray = mb.tray;
+    contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
+    tray.setToolTip(config.appName);
+    tray.on('right-click', (event, bounds) => {
+      if (mb.window) {
+        mb.window.close();
+      }
+      tray.popUpContextMenu(contextMenu);
+    });
+    //for OS-X
+    if (app.dock) {
+      app.dock.setIcon(appIcon);
+      app.dock.setMenu(contextMenu);
+    }
+    if (isDev) {
+      mb.window.openDevTools();
+    } else {
+      mb.window.webContents.on('devtools-opened', function (e) {
+        e.preventDefault();
+        this.closeDevTools();
+      });
+    }
   });
   //hide splash screen randomly after 2-3 seconds
   setTimeout(createMainWindow, (Math.random() + 2) * 1000);
@@ -236,7 +285,21 @@ function forceSingleInstance() {
 }
 
 function showSplashWindow() {
-  splashWindow = new BrowserWindow({ accessibleTitle: config.appName, title: config.appName, icon: config.appIcon, width: 400, height: 300, center: true, resizable: false, movable: false, alwaysOnTop: true, skipTaskbar: true, frame: false });
+  splashWindow = new BrowserWindow({
+    accessibleTitle: config.appName,
+    title: config.appName,
+    icon: config.appIcon,
+    width: 400,
+    height: 300,
+    center: true,
+    resizable: false,
+    movable: false,
+    alwaysOnTop: true,
+    fullscreenable: false,
+    skipTaskbar: true,
+    frame: false,
+    roundedCorners: false,
+  });
   splashWindow.setIcon(appIcon);
   splashWindow.setOverlayIcon(appIcon, config.appName);
   splashWindow.focus();
@@ -307,7 +370,7 @@ function createMainWindow() {
       this.closeDevTools();
     });
   }
-  mainWindow.loadURL('file://' + __dirname + '/photon/index.html', options);
+  mainWindow.loadURL(startURL, options);
   mainWindow.on('show', () => { mainWindow.focus(); });
   mainWindow.once('ready-to-show', () => {
     hideSplashWindow();

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>Vudit</title>
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="css/photon.css">
+        <link rel="stylesheet" href="css/custom.css">
+    </head>
+
+    <body>
+        <div class="window js-context-menu">
+            <!-- .toolbar-header sits at the top of your app -->
+            <header class="toolbar toolbar-header">
+                <div class="toolbar-actions">
+                    <div class="btn-group btn-large">
+                        <button class="btn btn-default btn-large" title="Open File"
+                            onclick="common.ipcRenderer.invoke('handleOpenFile')">
+                            <span class="icon icon-folder"></span>
+                        </button>
+                        <button class="btn btn-default btn-large" title="Open URL"
+                            onclick="common.ipcRenderer.invoke('handleOpenURL')">
+                            <span class="icon icon-link"></span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Your app's content goes inside .window-content -->
+            <div class="window-content">
+                <div class="pane-group">
+                    <div class="pane">
+                        <div class="drop-file">
+                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <button id="file-chooser">Choose a File</button>
+                            <span>OR</span>
+                            <h6 id="drop-file-text">Drag it here to Open</h6>
+                            <input id="file-input" type="file" hidden>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- .toolbar-footer sits at the bottom of your app -->
+            <footer class="toolbar toolbar-footer">
+                <h1 class="title" id="footer-text">Vudit</h1>
+            </footer>
+        </div>
+        <script src="js/drop.js"></script>
+    </body>
+
+</html>
