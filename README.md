@@ -56,12 +56,14 @@ To run -
 ```
 git clone https://github.com/praharshjain/Vudit-Desktop.git
 cd Vudit-Desktop
-npm install && npm start
+npm install (try npm install --force if any issues)
+npm start
 ```
 
 To build -
 ```
-npm install && npm run dist
+npm install (try npm install --force if any issues)
+npm run dist
 ```
 
 Screenshots
