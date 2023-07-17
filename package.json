@@ -690,6 +690,15 @@
                 "mimeType": "application/vnd.sqlite3",
                 "role": "Viewer",
                 "rank": "Documents"
+            },
+            {
+                "ext": "pgn",
+                "name": "PGN",
+                "icon": "app/icons/file_default.svg",
+                "description": "Portable Game Notation",
+                "mimeType": "text/pgn",
+                "role": "Viewer",
+                "rank": "Documents"
             }
         ]
     }
