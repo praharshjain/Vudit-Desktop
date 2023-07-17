@@ -14,7 +14,8 @@ Features
 * Image viewer, music and video player, support for media streaming
 * Document viewer
 * SWF (Flash) player
-* Code syntax highligher
+* PGN viewer
+* Code syntax highlighter
 * Ability to open URLs
 * Convert and play media files (which are not natively supported) like - "flv", "avi" etc using ffmpeg-wasm
 
@@ -42,11 +43,13 @@ Supported file types and extensions -
 
 5. SQLite File (sqlite)
 
-6. Text files and code files (with syntax highlighting):
+6. PGN file (portable game notation)
+
+7. Text files and code files (with syntax highlighting):
     
     "ascii", "asm", "awk", "bash", "bat", "bf", "bsh", "c", "cert", "cgi", "clj", "conf", "cpp", "cs", "css", "elr", "go", "h", "hs", "htaccess", "htm", "html", "ini", "java", "js", "key", "lisp", "log", "lua", "md", "mkdn", "pem", "php", "pl", "py", "rb", "readme", "scala", "sh", "sql", "srt", "sub", "tex", "toml", "txt", "vb", "vbs", "vhdl", "wollok", "xsd", "xsl", "iml", "gitignore", "gradle"  
     
-7. Any other file with mime type text
+8. Any other file with mime type text
 
 
 Usage
