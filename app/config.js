@@ -1,7 +1,9 @@
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
-const data = require(path.join(__dirname, '../package.json'));
+let data = require(path.join(__dirname, '../package.json'));
+data.build = { fileAssociations: require(path.join(__dirname, '../file_types.json')) };
+
 let arcExt = [], imageExt = [], audioExt = [], videoExt = [], treedocExt = [], markDownExt = [], docExt = [];
 let txtExt = [
     'ascii',
