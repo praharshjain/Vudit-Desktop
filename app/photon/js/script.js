@@ -60,13 +60,13 @@ function getRow(fileObj) {
     }
     else if (fileObj.isFile) {
         tr.setAttribute('onclick', 'previewFile("' + fileObj.path + '")');
-        tr.setAttribute('ondblclick', 'common.openFile("' + fileObj.path + '")');
+        tr.setAttribute('ondblclick', 'clearPreview();common.openFile("' + fileObj.path + '")');
     }
     return tr;
 }
 
 function showFiles(dirPath) {
-    previewFrame.src = '';
+    clearPreview();
     searchBar.value = '';
     currentDir = dirPath;
     footer.innerText = dirPath;
@@ -79,7 +79,11 @@ function showFiles(dirPath) {
 }
 
 function previewFile(path) {
-    previewFrame.src = common.getPreviewURL(path);;
+    previewFrame.src = common.getPreviewURL(path);
+}
+
+function clearPreview() {
+    previewFrame.src = '';
 }
 
 function filterFiles(e) {

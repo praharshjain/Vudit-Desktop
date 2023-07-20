@@ -13,8 +13,26 @@ const prompt = require('electron-prompt');
 const { menubar } = require('menubar');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, session, nativeImage } = require('electron');
+if (isDev) {
+  require('electron-reload')(__dirname, {
+    electron: path.join('node_modules', '.bin', 'electron')
+  });
+}
 const options = { extraHeaders: 'pragma: no-cache\n' };
 const appIcon = nativeImage.createFromPath(config.iconPath);
+const baseWebPreferences = {
+  devTools: isDev,
+  plugins: true,
+  scrollBounce: true,
+  webviewTag: true,
+  backgroundThrottling: false,
+  nodeIntegration: false,
+  nodeIntegrationInWorker: false,
+  nodeIntegrationInSubFrames: true,
+  contextIsolation: false,
+  preload: path.join(__dirname, 'functions.js'),
+  defaultEncoding: 'UTF-8'
+};
 const startURL = 'file://' + __dirname + '/photon/index.html';
 const dropURL = 'file://' + __dirname + '/photon/drop.html';
 let mainWindow, splashWindow, mb;
@@ -322,18 +340,7 @@ function createMainWindow() {
     width: 800,
     height: 600,
     show: false,
-    webPreferences: {
-      devTools: isDev,
-      plugins: true,
-      scrollBounce: true,
-      backgroundThrottling: false,
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
-      nodeIntegrationInSubFrames: true,
-      contextIsolation: false,
-      preload: path.join(__dirname, 'functions.js'),
-      defaultEncoding: 'UTF-8'
-    }
+    webPreferences: baseWebPreferences,
   });
   mainWindow.setIcon(appIcon);
   mainWindow.setOverlayIcon(appIcon, config.appName);
