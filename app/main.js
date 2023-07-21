@@ -15,7 +15,7 @@ const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, BrowserView, session, nativeImage } = require('electron');
 const options = { extraHeaders: 'pragma: no-cache\n' };
 const appIcon = nativeImage.createFromPath(config.iconPath);
-const fnPath = path.join(__dirname, 'functions.js'); c
+const fnPath = path.join(__dirname, 'functions.js');
 const whiteColor = '#ffffff;'
 const baseWebPreferences = {
   devTools: isDev,
