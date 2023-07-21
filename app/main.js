@@ -22,7 +22,6 @@ const baseWebPreferences = {
   plugins: true,
   scrollBounce: true,
   webviewTag: true,
-  backgroundThrottling: false,
   nodeIntegration: false,
   nodeIntegrationInWorker: false,
   nodeIntegrationInSubFrames: true,
@@ -662,6 +661,7 @@ function isViewPresent(url) {
 function closeView(url) {
   if (isViewPresent(url)) {
     let view = openViews[url];
+    view.webContents.close();
     mainWindow.removeBrowserView(view);
     delete openViews[url];
   }
