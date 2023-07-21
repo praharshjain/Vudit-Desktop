@@ -12,14 +12,10 @@ const isDev = require('electron-is-dev');
 const prompt = require('electron-prompt');
 const { menubar } = require('menubar');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
-const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, session, nativeImage } = require('electron');
-if (isDev) {
-  require('electron-reload')(__dirname, {
-    electron: path.join('node_modules', '.bin', 'electron')
-  });
-}
+const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, BrowserView, session, nativeImage } = require('electron');
 const options = { extraHeaders: 'pragma: no-cache\n' };
 const appIcon = nativeImage.createFromPath(config.iconPath);
+const fnPath = path.join(__dirname, 'functions.js');
 const baseWebPreferences = {
   devTools: isDev,
   plugins: true,
@@ -30,14 +26,17 @@ const baseWebPreferences = {
   nodeIntegrationInWorker: false,
   nodeIntegrationInSubFrames: true,
   contextIsolation: false,
-  preload: path.join(__dirname, 'functions.js'),
+  preload: fnPath,
   defaultEncoding: 'UTF-8'
 };
 const startURL = 'file://' + __dirname + '/photon/index.html';
 const dropURL = 'file://' + __dirname + '/photon/drop.html';
+const browserViewMarginTop = 55;
+const browserViewMarginLeft = 220;
 let mainWindow, splashWindow, mb;
 let contextMenu = null;
 let filepath = null;
+let openViews = {};
 
 // creating menus for menu bar
 const menuBarTemplate = [
@@ -171,9 +170,6 @@ app.on('ready', function () {
   showSplashWindow();
   Menu.setApplicationMenu(menu);
   // ipc stuff
-  ipcMain.handle('openFile', (e, path) => {
-    openFile(path);
-  });
   ipcMain.handle('handleOpenFile', (e) => {
     handleOpenFile();
   });
@@ -183,6 +179,18 @@ app.on('ready', function () {
   ipcMain.handle('listFiles', (e, dir) => {
     return listFiles(dir);
   });
+  ipcMain.on('openFile', (e, path) => {
+    e.returnValue = openFile(path);
+  });
+  ipcMain.on('restoreView', (e, path) => {
+    e.returnValue = canRestoreView(path);
+  });
+  ipcMain.on('closeView', (e, path) => {
+    e.returnValue = closeView(path);
+  })
+  ipcMain.on('hideOpenFiles', (e, path) => {
+    e.returnValue = hideOpenFiles();
+  })
   ipcMain.on('getConfig', (e) => {
     e.returnValue = JSON.stringify(config);
   });
@@ -203,7 +211,7 @@ app.on('ready', function () {
     nodeIntegrationInWorker: true,
     nodeIntegrationInSubFrames: true,
     contextIsolation: false,
-    preload: path.join(__dirname, 'functions.js'),
+    preload: fnPath,
     defaultEncoding: 'UTF-8'
   };
   mb = menubar({
@@ -466,7 +474,7 @@ function getViewerURLByType(path, ext, mimeType) {
 
 function openFile(path) {
   if (path == '') {
-    return;
+    return { state: fn.fileNotOpened, url: '' };
   }
   filepath = path;
   //preference to extension/mime first
@@ -474,7 +482,7 @@ function openFile(path) {
   let mimeType = mime.lookup(path);
   let viewerURL = getViewerURLByType(path, ext, mimeType);
   if (viewerURL != '') {
-    return mainWindow.loadURL(viewerURL, options);
+    return loadURLInWindow(mainWindow, viewerURL, true);
   }
   //try to read content type from headers
   if (path.startsWith('http')) {
@@ -483,17 +491,47 @@ function openFile(path) {
       mimeType = contentType.type + '/' + contentType.subtype;
       viewerURL = getViewerURLByType(path, mime.extension(mimeType), mimeType);
       if (viewerURL != '') {
-        return mainWindow.loadURL(viewerURL, options);
+        return loadURLInWindow(mainWindow, viewerURL, true);
       }
-      showUnsupportedDialog();
+      return showUnsupportedDialog();
     }).on('error', (err) => {
       console.error(err);
     }).end();
   } else {
-    showUnsupportedDialog();
+    return showUnsupportedDialog();
   }
 }
 
+
+function loadURLInWindow(win, url, loadInBrowserView = false) {
+  if (canRestoreView(url)) {
+    return { state: fn.fileRestored, url: url };
+  }
+  if (loadInBrowserView) {
+    let view = new BrowserView();
+    win.addBrowserView(view);
+    setBoundsForView(win, view);
+    let webPref = baseWebPreferences;
+    webPref.preload = null;
+    view.webPreferences = webPref;
+    openViews[url] = view;
+    view.webContents.loadURL(url);
+  } else {
+    win.loadURL(url, options);
+  }
+  return { state: fn.fileOpened, url: url };
+}
+
+function setBoundsForView(win, view) {
+  win.addBrowserView(view);
+  let bounds = win.getBounds();
+  bounds.x = browserViewMarginLeft;
+  bounds.y = browserViewMarginTop;
+  bounds.width -= bounds.x;
+  bounds.height -= bounds.y;
+  view.setBounds(bounds);
+  view.setAutoResize({ width: true, height: true });
+}
 
 function getPreviewURL(path) {
   if (path == '') {
@@ -513,6 +551,7 @@ function showUnsupportedDialog() {
     title: 'Unsupported file type',
     message: 'The selected file type is not supported.',
   });
+  return { state: fn.fileNotOpened, url: '' };
 }
 
 function getZipEntries(path) {
@@ -599,4 +638,32 @@ function sortFiles(filesArr) {
     return a.name < b.name;
   });
   return filesArr;
+}
+
+function hideOpenFiles() {
+  for (url in openViews) {
+    mainWindow.removeBrowserView(openViews[url]);
+  }
+}
+
+function canRestoreView(url) {
+  if (isViewPresent(url)) {
+    let view = openViews[url];
+    setBoundsForView(mainWindow, view);
+    mainWindow.addBrowserView(view);
+    return true;
+  }
+  return false;
+}
+
+function isViewPresent(url) {
+  return (url in openViews);
+}
+
+function closeView(url) {
+  if (isViewPresent(url)) {
+    let view = openViews[url];
+    mainWindow.removeBrowserView(view);
+    delete openViews[url];
+  }
 }

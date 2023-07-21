@@ -15,6 +15,11 @@
     display: none;
 }
 
+.nav-group-item .float-right {
+    float: right;
+    margin-right: 0px !important;
+}
+
 .nav-group,
 .nav-group-title {
     font-size: 20px;

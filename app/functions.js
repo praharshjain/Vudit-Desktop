@@ -1,4 +1,7 @@
 const { ipcRenderer } = require('electron');
+const fileNotOpened = 'file-not-opened';
+const fileOpened = 'file-opened';
+const fileRestored = 'file-restored';
 let fileTypeMap = null;
 
 function getFileExt(filePath) {
@@ -47,7 +50,7 @@ function fileNameToIcon(path) {
 }
 
 function openFile(path) {
-    ipcRenderer.invoke('openFile', path);
+    return ipcRenderer.sendSync('openFile', path);
 }
 function getPreviewURL(path) {
     return ipcRenderer.sendSync('getPreviewURL', path);
@@ -93,6 +96,9 @@ function getReadableSize(fileObj) {
 }
 
 let common = {
+    fileNotOpened: fileNotOpened,
+    fileOpened: fileOpened,
+    fileRestored: fileRestored,
     getKind: getKind,
     getIcon: getIcon,
     openFile: openFile,
