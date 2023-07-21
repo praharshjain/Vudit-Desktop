@@ -34,6 +34,7 @@ const dropURL = 'file://' + __dirname + '/photon/drop.html';
 const browserViewMarginTop = 55;
 const browserViewMarginLeft = 220;
 let mainWindow, splashWindow, mb;
+let activeBrowserView = null;
 let contextMenu = null;
 let filepath = null;
 let openViews = {};
@@ -361,6 +362,12 @@ function createMainWindow() {
     mainWindow = null;
     app.quit();
   });
+  mainWindow.on('moved', resizeBrowserView);
+  mainWindow.on('leave-full-screen', resizeBrowserView);
+  mainWindow.on('leave-html-full-screen', resizeBrowserView);
+  mainWindow.on('moved', resizeBrowserView);
+  mainWindow.on('enter-full-screen', handleFullScreen);
+  mainWindow.on('enter-html-full-screen', handleFullScreen);
   mainWindow.webContents.on('new-window', function (e, url) {
     e.preventDefault();
     shell.openExternal(url);
@@ -509,11 +516,11 @@ function loadURLInWindow(win, url, loadInBrowserView = false) {
   }
   if (loadInBrowserView) {
     let view = new BrowserView({ webPreferences: baseWebPreferences });
-    setBoundsForView(win, view);
     view.setBackgroundColor(whiteColor);
     view.webContents.loadURL(url);
     openViews[url] = view;
     win.addBrowserView(view);
+    setBoundsForView(win, view);
   } else {
     win.loadURL(url, options);
   }
@@ -521,8 +528,8 @@ function loadURLInWindow(win, url, loadInBrowserView = false) {
 }
 
 function setBoundsForView(win, view) {
-  win.addBrowserView(view);
-  let bounds = win.getBounds();
+  activeBrowserView = view;
+  let bounds = win.getContentBounds();
   bounds.x = browserViewMarginLeft;
   bounds.y = browserViewMarginTop;
   bounds.width -= bounds.x;
@@ -647,8 +654,9 @@ function hideOpenFiles() {
 function canRestoreView(url) {
   if (isViewPresent(url)) {
     let view = openViews[url];
-    setBoundsForView(mainWindow, view);
     mainWindow.addBrowserView(view);
+    setBoundsForView(mainWindow, view);
+    activeBrowserView = view;
     return true;
   }
   return false;
@@ -662,7 +670,23 @@ function closeView(url) {
   if (isViewPresent(url)) {
     let view = openViews[url];
     view.webContents.close();
+    activeBrowserView = null;
     mainWindow.removeBrowserView(view);
     delete openViews[url];
+  }
+}
+
+function resizeBrowserView() {
+  if (activeBrowserView) {
+    setBoundsForView(mainWindow, activeBrowserView);
+  }
+}
+
+function handleFullScreen() {
+  if (activeBrowserView) {
+    let bounds = mainWindow.getBounds();
+    bounds.x = 0;
+    bounds.y = 0;
+    activeBrowserView.setBounds(bounds);
   }
 }
