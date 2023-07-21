@@ -82,6 +82,14 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function getFileNameFromPath(path) {
+    let pos = path.lastIndexOf('/');
+    if (pos > 0) {
+        return path.substring(pos + 1);
+    }
+    return path;
+}
+
 function getReadableSize(fileObj) {
     if (!fileObj.isFile) {
         return '--';
@@ -109,6 +117,7 @@ let common = {
     fileNameToIcon: fileNameToIcon,
     getReadableSize: getReadableSize,
     getParameterByName: getParameterByName,
+    getFileNameFromPath: getFileNameFromPath,
 }
 if (typeof module != 'undefined') {
     module.exports = common;

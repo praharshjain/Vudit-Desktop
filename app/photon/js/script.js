@@ -6,11 +6,17 @@ const previewFrame = document.getElementById('preview-file'),
 //file listing stuff
 const tableBody = document.getElementById('files-list');
 const dirPaths = common.getConfig().dirPaths;
-let searchBar = document.getElementById('search-bar');
-searchBar.addEventListener('input', filterFiles);
 let favoritesPane = document.getElementById('sidebar-nav-pane');
 let openFilesPane = document.getElementById('sidebar-open-files-pane');
 let footer = document.getElementById('footer-text');
+let searchBar = document.getElementById('search-bar');
+searchBar.addEventListener('input', filterFiles);
+common.ipcRenderer.on('fileOpened', function (e, obj, path) {
+    if (obj.state == common.fileOpened || obj.state == common.fileRestored) {
+        createFileListing(common.getFileNameFromPath(path), path, obj.url);
+    }
+});
+
 let currentDir = dirPaths.Home.path;
 for (d in dirPaths) {
     let sp = document.createElement('span');
@@ -82,11 +88,15 @@ function showFiles(e, dirPath) {
 }
 
 function hideOpenFiles() {
+    makeAllListingsInActive();
+    common.ipcRenderer.sendSync('hideOpenFiles');
+}
+
+function makeAllListingsInActive() {
     let ele = document.getElementsByClassName('nav-group-item');
     for (let i = 0; i < ele.length; i++) {
         ele[i].classList.remove('active');
     }
-    common.ipcRenderer.sendSync('hideOpenFiles');
 }
 
 function previewFile(path) {
@@ -102,14 +112,24 @@ function openFile(name, path) {
     hideOpenFiles();
     let res = common.openFile(path);
     if (res.state == common.fileOpened) {
-        let sp = document.createElement('span');
-        sp.setAttribute('class', 'nav-group-item active');
-        sp.setAttribute('onclick', 'restoreFile(this)');
-        sp.setAttribute('title', path);
-        sp.setAttribute('id', res.url);
-        sp.innerHTML = '<span class="icon icon-cancel float-right" onclick="closeFile(event);"></span>' + name;
-        openFilesPane.appendChild(sp);
+        createFileListing(name, path, res.url);
     }
+}
+
+function createFileListing(name, path, url) {
+    let ele = document.getElementById(url);
+    if (ele && ele.parentNode == openFilesPane) {
+        makeAllListingsInActive();
+        ele.classList.add('active');
+        return;
+    }
+    let sp = document.createElement('span');
+    sp.setAttribute('class', 'nav-group-item active');
+    sp.setAttribute('onclick', 'restoreFile(this)');
+    sp.setAttribute('title', path);
+    sp.setAttribute('id', url);
+    sp.innerHTML = '<span class="icon icon-cancel float-right" onclick="closeFile(event);"></span>' + name;
+    openFilesPane.appendChild(sp);
 }
 
 function restoreFile(ele) {

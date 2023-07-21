@@ -512,7 +512,9 @@ function openFile(path) {
 
 function loadURLInWindow(win, url, loadInBrowserView = false) {
   if (canRestoreView(url)) {
-    return { state: fn.fileRestored, url: url };
+    let obj = { state: fn.fileRestored, url: url };
+    win.webContents.send('fileOpened', obj, filepath);
+    return obj;
   }
   if (loadInBrowserView) {
     let view = new BrowserView({ webPreferences: baseWebPreferences });
@@ -524,7 +526,9 @@ function loadURLInWindow(win, url, loadInBrowserView = false) {
   } else {
     win.loadURL(url, options);
   }
-  return { state: fn.fileOpened, url: url };
+  let obj = { state: fn.fileOpened, url: url };
+  win.webContents.send('fileOpened', obj, filepath);
+  return obj;
 }
 
 function setBoundsForView(win, view) {
