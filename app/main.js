@@ -15,7 +15,8 @@ const { ElectronChromeExtensions } = require('electron-chrome-extensions');
 const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, BrowserView, session, nativeImage } = require('electron');
 const options = { extraHeaders: 'pragma: no-cache\n' };
 const appIcon = nativeImage.createFromPath(config.iconPath);
-const fnPath = path.join(__dirname, 'functions.js');
+const fnPath = path.join(__dirname, 'functions.js'); c
+const whiteColor = '#ffffff;'
 const baseWebPreferences = {
   devTools: isDev,
   plugins: true,
@@ -508,14 +509,12 @@ function loadURLInWindow(win, url, loadInBrowserView = false) {
     return { state: fn.fileRestored, url: url };
   }
   if (loadInBrowserView) {
-    let view = new BrowserView();
-    win.addBrowserView(view);
+    let view = new BrowserView({ webPreferences: baseWebPreferences });
     setBoundsForView(win, view);
-    let webPref = baseWebPreferences;
-    webPref.preload = null;
-    view.webPreferences = webPref;
-    openViews[url] = view;
+    view.setBackgroundColor(whiteColor);
     view.webContents.loadURL(url);
+    openViews[url] = view;
+    win.addBrowserView(view);
   } else {
     win.loadURL(url, options);
   }
