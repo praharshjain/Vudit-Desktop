@@ -66,14 +66,6 @@ const menuBarTemplate = [
         },
       },
       {
-        label: 'Open Containing Folder',
-        accelerator: 'CmdOrCtrl+F',
-        click: function (item, focusedWindow) {
-          if (focusedWindow && filepath)
-            shell.showItemInFolder(filepath);
-        },
-      },
-      {
         type: 'separator',
       },
       { role: 'quit' },
