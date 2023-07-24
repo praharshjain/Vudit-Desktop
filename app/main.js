@@ -36,7 +36,6 @@ const browserViewMarginLeft = 220;
 let mainWindow, splashWindow, mb;
 let activeBrowserView = null;
 let contextMenu = null;
-let filepath = null;
 let openViews = {};
 
 // creating menus for menu bar
@@ -459,7 +458,6 @@ function openFile(path, mimeType = '') {
   if (path == '') {
     return { state: fn.fileNotOpened, url: '' };
   }
-  filepath = path;
   //preference to extension/mime first
   let ext = fn.getFileExt(path);
   if (mimeType == '') {
@@ -467,7 +465,7 @@ function openFile(path, mimeType = '') {
   }
   let viewerURL = getViewerURLByType(path, ext, mimeType);
   if (viewerURL != '') {
-    return loadURLInWindow(mainWindow, viewerURL, true);
+    return loadURLInWindow(mainWindow, viewerURL, path, true);
   }
   //try to read content type from headers
   if (path.startsWith('http')) {
@@ -476,7 +474,7 @@ function openFile(path, mimeType = '') {
       mimeType = contentType.type + '/' + contentType.subtype;
       viewerURL = getViewerURLByType(path, mime.extension(mimeType), mimeType);
       if (viewerURL != '') {
-        return loadURLInWindow(mainWindow, viewerURL, true);
+        return loadURLInWindow(mainWindow, viewerURL, path, true);
       }
       return showUnsupportedDialog(path);
     }).on('error', (err) => {
@@ -488,10 +486,10 @@ function openFile(path, mimeType = '') {
 }
 
 
-function loadURLInWindow(win, url, loadInBrowserView = false) {
+function loadURLInWindow(win, url, path, loadInBrowserView = false) {
   if (canRestoreView(url)) {
     let obj = { state: fn.fileRestored, url: url };
-    win.webContents.send('fileOpened', obj, filepath);
+    win.webContents.send('fileOpened', obj, path);
     return obj;
   }
   if (loadInBrowserView) {
@@ -505,7 +503,7 @@ function loadURLInWindow(win, url, loadInBrowserView = false) {
     win.loadURL(url, options);
   }
   let obj = { state: fn.fileOpened, url: url };
-  win.webContents.send('fileOpened', obj, filepath);
+  win.webContents.send('fileOpened', obj, path);
   return obj;
 }
 
@@ -524,7 +522,6 @@ function getPreviewURL(path) {
   if (path == '') {
     return '';
   }
-  filepath = path;
   //preference to extension/mime first
   let ext = fn.getFileExt(path);
   let mimeType = mime.lookup(path);
