@@ -1,4 +1,7 @@
 const { ipcRenderer } = require('electron');
+const fileNotOpened = 'file-not-opened';
+const fileOpened = 'file-opened';
+const fileRestored = 'file-restored';
 let fileTypeMap = null;
 
 function getFileExt(filePath) {
@@ -47,7 +50,7 @@ function fileNameToIcon(path) {
 }
 
 function openFile(path) {
-    ipcRenderer.invoke('openFile', path);
+    return ipcRenderer.sendSync('openFile', path);
 }
 function getPreviewURL(path) {
     return ipcRenderer.sendSync('getPreviewURL', path);
@@ -79,6 +82,14 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function getFileNameFromPath(path) {
+    let pos = path.lastIndexOf('/');
+    if (pos > 0) {
+        return path.substring(pos + 1);
+    }
+    return path;
+}
+
 function getReadableSize(fileObj) {
     if (!fileObj.isFile) {
         return '--';
@@ -93,6 +104,9 @@ function getReadableSize(fileObj) {
 }
 
 let common = {
+    fileNotOpened: fileNotOpened,
+    fileOpened: fileOpened,
+    fileRestored: fileRestored,
     getKind: getKind,
     getIcon: getIcon,
     openFile: openFile,
@@ -103,6 +117,7 @@ let common = {
     fileNameToIcon: fileNameToIcon,
     getReadableSize: getReadableSize,
     getParameterByName: getParameterByName,
+    getFileNameFromPath: getFileNameFromPath,
 }
 if (typeof module != 'undefined') {
     module.exports = common;

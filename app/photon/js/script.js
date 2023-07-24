@@ -6,19 +6,26 @@ const previewFrame = document.getElementById('preview-file'),
 //file listing stuff
 const tableBody = document.getElementById('files-list');
 const dirPaths = common.getConfig().dirPaths;
+let favoritesPane = document.getElementById('sidebar-nav-pane');
+let openFilesPane = document.getElementById('sidebar-open-files-pane');
+let footer = document.getElementById('footer-text');
 let searchBar = document.getElementById('search-bar');
 searchBar.addEventListener('input', filterFiles);
-let sideBar = document.getElementById('sidebar-nav-pane');
-let footer = document.getElementById('footer-text');
-let currentDir = common.getConfig().dirPaths.Home.path;
+common.ipcRenderer.on('fileOpened', function (e, obj, path) {
+    if (obj.state == common.fileOpened || obj.state == common.fileRestored) {
+        createFileListing(common.getFileNameFromPath(path), path, obj.url);
+    }
+});
+
+let currentDir = dirPaths.Home.path;
 for (d in dirPaths) {
     let sp = document.createElement('span');
     sp.setAttribute('class', 'nav-group-item');
-    sp.setAttribute('onclick', 'showFiles("' + dirPaths[d].path + '")');
+    sp.setAttribute('onclick', 'showFiles(this, "' + dirPaths[d].path + '")');
     sp.innerHTML = '<span class="icon ' + dirPaths[d].icon + '"></span>' + d;
-    sideBar.appendChild(sp);
+    favoritesPane.appendChild(sp);
 }
-showFiles(currentDir);
+showFiles(favoritesPane.children[2], currentDir);
 
 function goBack() {
     let b = document.getElementById('backlink');
@@ -53,20 +60,22 @@ function getRow(fileObj) {
     tr.setAttribute('data-path', fileObj.path);
     if (fileObj.isBackLink) {
         tr.setAttribute('id', 'backlink');
-        tr.setAttribute('onclick', 'showFiles("' + fileObj.path + '")');
+        tr.setAttribute('onclick', 'showFiles(this, "' + fileObj.path + '")');
     }
     else if (fileObj.isDir) {
-        tr.setAttribute('onclick', 'showFiles("' + fileObj.path + '")');
+        tr.setAttribute('onclick', 'showFiles(this, "' + fileObj.path + '")');
     }
     else if (fileObj.isFile) {
         tr.setAttribute('onclick', 'previewFile("' + fileObj.path + '")');
-        tr.setAttribute('ondblclick', 'clearPreview();common.openFile("' + fileObj.path + '")');
+        tr.setAttribute('ondblclick', 'openFile("' + fileObj.name + '", "' + fileObj.path + '")');
     }
     return tr;
 }
 
-function showFiles(dirPath) {
+function showFiles(e, dirPath) {
     clearPreview();
+    hideOpenFiles();
+    e.classList.add('active');
     searchBar.value = '';
     currentDir = dirPath;
     footer.innerText = dirPath;
@@ -78,12 +87,64 @@ function showFiles(dirPath) {
     });
 }
 
+function hideOpenFiles() {
+    makeAllListingsInActive();
+    common.ipcRenderer.sendSync('hideOpenFiles');
+}
+
+function makeAllListingsInActive() {
+    let ele = document.getElementsByClassName('nav-group-item');
+    for (let i = 0; i < ele.length; i++) {
+        ele[i].classList.remove('active');
+    }
+}
+
 function previewFile(path) {
     previewFrame.src = common.getPreviewURL(path);
 }
 
 function clearPreview() {
     previewFrame.src = '';
+}
+
+function openFile(name, path) {
+    clearPreview();
+    hideOpenFiles();
+    let res = common.openFile(path);
+    if (res.state == common.fileOpened) {
+        createFileListing(name, path, res.url);
+    }
+}
+
+function createFileListing(name, path, url) {
+    let ele = document.getElementById(url);
+    if (ele && ele.parentNode == openFilesPane) {
+        makeAllListingsInActive();
+        ele.classList.add('active');
+        return;
+    }
+    let sp = document.createElement('span');
+    sp.setAttribute('class', 'nav-group-item active');
+    sp.setAttribute('onclick', 'restoreFile(this)');
+    sp.setAttribute('title', path);
+    sp.setAttribute('id', url);
+    sp.innerHTML = '<span class="icon icon-cancel float-right" onclick="closeFile(event);"></span>' + name;
+    openFilesPane.appendChild(sp);
+}
+
+function restoreFile(ele) {
+    hideOpenFiles();
+    ele.classList.add('active');
+    return common.ipcRenderer.sendSync('restoreView', ele.id);
+}
+
+function closeFile(e) {
+    e.stopPropagation();
+    hideOpenFiles();
+    let ele = e.target;
+    common.ipcRenderer.sendSync('closeView', ele.parentNode.id);
+    ele.parentNode.remove(ele);
+    showFiles(favoritesPane.children[2], dirPaths.Home.path);
 }
 
 function filterFiles(e) {

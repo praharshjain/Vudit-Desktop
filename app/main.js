@@ -12,32 +12,31 @@ const isDev = require('electron-is-dev');
 const prompt = require('electron-prompt');
 const { menubar } = require('menubar');
 const { ElectronChromeExtensions } = require('electron-chrome-extensions');
-const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, session, nativeImage } = require('electron');
-if (isDev) {
-  require('electron-reload')(__dirname, {
-    electron: path.join('node_modules', '.bin', 'electron')
-  });
-}
+const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, BrowserView, session, nativeImage } = require('electron');
 const options = { extraHeaders: 'pragma: no-cache\n' };
 const appIcon = nativeImage.createFromPath(config.iconPath);
+const fnPath = path.join(__dirname, 'functions.js');
+const whiteColor = '#ffffff;'
 const baseWebPreferences = {
   devTools: isDev,
   plugins: true,
   scrollBounce: true,
   webviewTag: true,
-  backgroundThrottling: false,
   nodeIntegration: false,
   nodeIntegrationInWorker: false,
   nodeIntegrationInSubFrames: true,
   contextIsolation: false,
-  preload: path.join(__dirname, 'functions.js'),
+  preload: fnPath,
   defaultEncoding: 'UTF-8'
 };
 const startURL = 'file://' + __dirname + '/photon/index.html';
 const dropURL = 'file://' + __dirname + '/photon/drop.html';
+const browserViewMarginTop = 55;
+const browserViewMarginLeft = 220;
 let mainWindow, splashWindow, mb;
+let activeBrowserView = null;
 let contextMenu = null;
-let filepath = null;
+let openViews = {};
 
 // creating menus for menu bar
 const menuBarTemplate = [
@@ -62,30 +61,6 @@ const menuBarTemplate = [
         click: function (item, focusedWindow) {
           if (focusedWindow) {
             handleOpenURL();
-          }
-        },
-      },
-      {
-        label: 'Open Containing Folder',
-        accelerator: 'CmdOrCtrl+F',
-        click: function (item, focusedWindow) {
-          if (focusedWindow && filepath)
-            shell.showItemInFolder(filepath);
-        },
-      },
-      {
-        label: 'Print',
-        accelerator: 'CmdOrCtrl+P',
-        click: function (item, focusedWindow) {
-          if (focusedWindow) focusedWindow.webContents.print();
-        },
-      },
-      {
-        label: 'Close',
-        accelerator: 'Shift+CmdOrCtrl+Z',
-        click: function (item, focusedWindow) {
-          if (focusedWindow) {
-            focusedWindow.loadURL(startURL, options);
           }
         },
       },
@@ -171,9 +146,6 @@ app.on('ready', function () {
   showSplashWindow();
   Menu.setApplicationMenu(menu);
   // ipc stuff
-  ipcMain.handle('openFile', (e, path) => {
-    openFile(path);
-  });
   ipcMain.handle('handleOpenFile', (e) => {
     handleOpenFile();
   });
@@ -183,6 +155,18 @@ app.on('ready', function () {
   ipcMain.handle('listFiles', (e, dir) => {
     return listFiles(dir);
   });
+  ipcMain.on('openFile', (e, path) => {
+    e.returnValue = openFile(path);
+  });
+  ipcMain.on('restoreView', (e, path) => {
+    e.returnValue = canRestoreView(path);
+  });
+  ipcMain.on('closeView', (e, path) => {
+    e.returnValue = closeView(path);
+  })
+  ipcMain.on('hideOpenFiles', (e, path) => {
+    e.returnValue = hideOpenFiles();
+  })
   ipcMain.on('getConfig', (e) => {
     e.returnValue = JSON.stringify(config);
   });
@@ -203,7 +187,7 @@ app.on('ready', function () {
     nodeIntegrationInWorker: true,
     nodeIntegrationInSubFrames: true,
     contextIsolation: false,
-    preload: path.join(__dirname, 'functions.js'),
+    preload: fnPath,
     defaultEncoding: 'UTF-8'
   };
   mb = menubar({
@@ -353,6 +337,12 @@ function createMainWindow() {
     mainWindow = null;
     app.quit();
   });
+  mainWindow.on('moved', resizeBrowserView);
+  mainWindow.on('leave-full-screen', resizeBrowserView);
+  mainWindow.on('leave-html-full-screen', resizeBrowserView);
+  mainWindow.on('moved', resizeBrowserView);
+  mainWindow.on('enter-full-screen', handleFullScreen);
+  mainWindow.on('enter-html-full-screen', handleFullScreen);
   mainWindow.webContents.on('new-window', function (e, url) {
     e.preventDefault();
     shell.openExternal(url);
@@ -464,17 +454,18 @@ function getViewerURLByType(path, ext, mimeType) {
   return '';
 }
 
-function openFile(path) {
+function openFile(path, mimeType = '') {
   if (path == '') {
-    return;
+    return { state: fn.fileNotOpened, url: '' };
   }
-  filepath = path;
   //preference to extension/mime first
   let ext = fn.getFileExt(path);
-  let mimeType = mime.lookup(path);
+  if (mimeType == '') {
+    mimeType = mime.lookup(path);
+  }
   let viewerURL = getViewerURLByType(path, ext, mimeType);
   if (viewerURL != '') {
-    return mainWindow.loadURL(viewerURL, options);
+    return loadURLInWindow(mainWindow, viewerURL, path, true);
   }
   //try to read content type from headers
   if (path.startsWith('http')) {
@@ -483,36 +474,73 @@ function openFile(path) {
       mimeType = contentType.type + '/' + contentType.subtype;
       viewerURL = getViewerURLByType(path, mime.extension(mimeType), mimeType);
       if (viewerURL != '') {
-        return mainWindow.loadURL(viewerURL, options);
+        return loadURLInWindow(mainWindow, viewerURL, path, true);
       }
-      showUnsupportedDialog();
+      return showUnsupportedDialog(path);
     }).on('error', (err) => {
       console.error(err);
     }).end();
   } else {
-    showUnsupportedDialog();
+    return showUnsupportedDialog(path);
   }
 }
 
+
+function loadURLInWindow(win, url, path, loadInBrowserView = false) {
+  if (canRestoreView(url)) {
+    let obj = { state: fn.fileRestored, url: url };
+    win.webContents.send('fileOpened', obj, path);
+    return obj;
+  }
+  if (loadInBrowserView) {
+    let view = new BrowserView({ webPreferences: baseWebPreferences });
+    view.setBackgroundColor(whiteColor);
+    view.webContents.loadURL(url);
+    openViews[url] = view;
+    win.addBrowserView(view);
+    setBoundsForView(win, view);
+  } else {
+    win.loadURL(url, options);
+  }
+  let obj = { state: fn.fileOpened, url: url };
+  win.webContents.send('fileOpened', obj, path);
+  return obj;
+}
+
+function setBoundsForView(win, view) {
+  activeBrowserView = view;
+  let bounds = win.getContentBounds();
+  bounds.x = browserViewMarginLeft;
+  bounds.y = browserViewMarginTop;
+  bounds.width -= bounds.x;
+  bounds.height -= bounds.y;
+  view.setBounds(bounds);
+  view.setAutoResize({ width: true, height: true });
+}
 
 function getPreviewURL(path) {
   if (path == '') {
     return '';
   }
-  filepath = path;
   //preference to extension/mime first
   let ext = fn.getFileExt(path);
   let mimeType = mime.lookup(path);
   return getViewerURLByType(path, ext, mimeType);
 }
 
-function showUnsupportedDialog() {
-  dialog.showMessageBox(mainWindow, {
-    type: 'info',
-    buttons: ['OK'],
-    title: 'Unsupported file type',
-    message: 'The selected file type is not supported.',
+function showUnsupportedDialog(path) {
+  let choice = dialog.showMessageBoxSync(mainWindow, {
+    type: 'question',
+    buttons: ['Yes', 'No'],
+    defaultId: 1,
+    cancelId: 1,
+    title: 'Unsupported/unknown file type',
+    message: 'The selected file type is not supported. Do you want to open it as text?',
   });
+  if (choice == 0) {
+    openFile(path, 'text/plain');
+  }
+  return { state: fn.fileNotOpened, url: '' };
 }
 
 function getZipEntries(path) {
@@ -599,4 +627,50 @@ function sortFiles(filesArr) {
     return a.name < b.name;
   });
   return filesArr;
+}
+
+function hideOpenFiles() {
+  for (url in openViews) {
+    mainWindow.removeBrowserView(openViews[url]);
+  }
+}
+
+function canRestoreView(url) {
+  if (isViewPresent(url)) {
+    let view = openViews[url];
+    mainWindow.addBrowserView(view);
+    setBoundsForView(mainWindow, view);
+    activeBrowserView = view;
+    return true;
+  }
+  return false;
+}
+
+function isViewPresent(url) {
+  return (url in openViews);
+}
+
+function closeView(url) {
+  if (isViewPresent(url)) {
+    let view = openViews[url];
+    view.webContents.close();
+    activeBrowserView = null;
+    mainWindow.removeBrowserView(view);
+    delete openViews[url];
+  }
+}
+
+function resizeBrowserView() {
+  if (activeBrowserView) {
+    setBoundsForView(mainWindow, activeBrowserView);
+  }
+}
+
+function handleFullScreen() {
+  if (activeBrowserView) {
+    let bounds = mainWindow.getBounds();
+    bounds.x = 0;
+    bounds.y = 0;
+    activeBrowserView.setBounds(bounds);
+  }
 }
