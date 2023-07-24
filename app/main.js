@@ -74,22 +74,6 @@ const menuBarTemplate = [
         },
       },
       {
-        label: 'Print',
-        accelerator: 'CmdOrCtrl+P',
-        click: function (item, focusedWindow) {
-          if (focusedWindow) focusedWindow.webContents.print();
-        },
-      },
-      {
-        label: 'Close',
-        accelerator: 'Shift+CmdOrCtrl+Z',
-        click: function (item, focusedWindow) {
-          if (focusedWindow) {
-            focusedWindow.loadURL(startURL, options);
-          }
-        },
-      },
-      {
         type: 'separator',
       },
       { role: 'quit' },
