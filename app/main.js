@@ -455,14 +455,16 @@ function getViewerURLByType(path, ext, mimeType) {
   return '';
 }
 
-function openFile(path) {
+function openFile(path, mimeType = '') {
   if (path == '') {
     return { state: fn.fileNotOpened, url: '' };
   }
   filepath = path;
   //preference to extension/mime first
   let ext = fn.getFileExt(path);
-  let mimeType = mime.lookup(path);
+  if (mimeType == '') {
+    mimeType = mime.lookup(path);
+  }
   let viewerURL = getViewerURLByType(path, ext, mimeType);
   if (viewerURL != '') {
     return loadURLInWindow(mainWindow, viewerURL, true);
@@ -476,12 +478,12 @@ function openFile(path) {
       if (viewerURL != '') {
         return loadURLInWindow(mainWindow, viewerURL, true);
       }
-      return showUnsupportedDialog();
+      return showUnsupportedDialog(path);
     }).on('error', (err) => {
       console.error(err);
     }).end();
   } else {
-    return showUnsupportedDialog();
+    return showUnsupportedDialog(path);
   }
 }
 
@@ -529,13 +531,18 @@ function getPreviewURL(path) {
   return getViewerURLByType(path, ext, mimeType);
 }
 
-function showUnsupportedDialog() {
-  dialog.showMessageBox(mainWindow, {
-    type: 'info',
-    buttons: ['OK'],
-    title: 'Unsupported file type',
-    message: 'The selected file type is not supported.',
+function showUnsupportedDialog(path) {
+  let choice = dialog.showMessageBoxSync(mainWindow, {
+    type: 'question',
+    buttons: ['Yes', 'No'],
+    defaultId: 1,
+    cancelId: 1,
+    title: 'Unsupported/unknown file type',
+    message: 'The selected file type is not supported. Do you want to open it as text?',
   });
+  if (choice == 0) {
+    openFile(path, 'text/plain');
+  }
   return { state: fn.fileNotOpened, url: '' };
 }
 
