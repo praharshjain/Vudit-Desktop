@@ -532,7 +532,7 @@ function showUnsupportedDialog(path) {
   let choice = dialog.showMessageBoxSync(mainWindow, {
     type: 'question',
     buttons: ['Yes', 'No'],
-    defaultId: 1,
+    defaultId: 0,
     cancelId: 1,
     title: 'Unsupported/unknown file type',
     message: 'The selected file type is not supported. Do you want to open it as text?',
