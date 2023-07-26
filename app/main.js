@@ -31,6 +31,7 @@ const baseWebPreferences = {
 };
 const startURL = 'file://' + __dirname + '/photon/index.html';
 const dropURL = 'file://' + __dirname + '/photon/drop.html';
+const splashURL = 'file://' + __dirname + '/splash.html';
 const browserViewMarginTop = 55;
 const browserViewMarginLeft = 220;
 let mainWindow, splashWindow, mb;
@@ -305,7 +306,7 @@ function showSplashWindow() {
   splashWindow.setIcon(appIcon);
   splashWindow.setOverlayIcon(appIcon, config.appName);
   splashWindow.focus();
-  splashWindow.loadURL('file://' + __dirname + '/splash.html', options);
+  splashWindow.loadURL(splashURL, options);
 }
 
 function hideSplashWindow() {
