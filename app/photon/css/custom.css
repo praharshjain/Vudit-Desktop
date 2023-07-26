@@ -92,7 +92,7 @@ table.grid-view #backlink {
 table.grid-view td.file-size,
 table.grid-view td.file-name,
 table.grid-view td.icon-holder {
-    display: grid;
+    display: block;
 }
 
 table.grid-view td {
@@ -102,7 +102,7 @@ table.grid-view td {
 
 table.grid-view tr {
     float: left;
-    min-width: 150px;
+    width: 150px;
 }
 
 table.grid-view tr:nth-child(even) {

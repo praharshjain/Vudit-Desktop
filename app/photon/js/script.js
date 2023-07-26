@@ -58,6 +58,7 @@ function getRow(fileObj) {
     time.innerText = fileObj.isBackLink ? '-' : fileObj.mTime.toString();
     tr.appendChild(time);
     tr.setAttribute('data-path', fileObj.path);
+    tr.setAttribute('title', fileObj.name);
     if (fileObj.isBackLink) {
         tr.setAttribute('id', 'backlink');
         tr.setAttribute('onclick', 'showFiles(this, "' + fileObj.path + '")');
