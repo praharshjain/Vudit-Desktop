@@ -14,8 +14,10 @@
  */
 
 #openFile,
-#download {
-  display: none;
+#download,
+#secondaryOpenFile,
+#secondaryDownload {
+  display: none !important;
 }
 
 .textLayer {
