@@ -102,7 +102,7 @@ for (let ext of txtExt) {
 //manual overrides
 fileTypeMap['pgn'].url = '/pgnviewer/index.html?file=';
 fileTypeMap['swf'].url = '/swfviewer/index.html?file=';
-fileTypeMap['pdf'].url = '/pdfviewer/web/viewer.html?file=';
+fileTypeMap['pdf'].url = '/pdfviewer/external/pdfjs-dist/web/viewer.html?file=';
 fileTypeMap['epub'].url = '/epubviewer/index.html?file=';
 fileTypeMap['opf'].url = '/epubviewer/index.html?file=';
 fileTypeMap['rtf'].url = '/rtfviewer/index.html?file=';
