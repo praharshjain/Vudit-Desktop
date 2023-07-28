@@ -5209,7 +5209,7 @@
         kind: OptionKind.VIEWER
       },
       renderInteractiveForms: {
-        value: false,
+        value: true,
         kind: OptionKind.VIEWER
       },
       sidebarViewOnLoad: {
@@ -5217,11 +5217,11 @@
         kind: OptionKind.VIEWER
       },
       scrollModeOnLoad: {
-        value: -1,
+        value: 0,
         kind: OptionKind.VIEWER
       },
       spreadModeOnLoad: {
-        value: -1,
+        value: 0,
         kind: OptionKind.VIEWER
       },
       textLayerMode: {
@@ -13878,12 +13878,12 @@
           "useOnlyCssZoom": false,
           "externalLinkTarget": 0,
           "renderer": "canvas",
-          "renderInteractiveForms": false,
+          "renderInteractiveForms": true,
           "enablePrintAutoRotate": false,
           "disablePageLabels": false,
           "historyUpdateUrl": false,
-          "scrollModeOnLoad": -1,
-          "spreadModeOnLoad": -1
+          "scrollModeOnLoad": 0,
+          "spreadModeOnLoad": 0
         });
       }
 
