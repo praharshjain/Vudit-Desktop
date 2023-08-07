@@ -1,33 +1,54 @@
 <html>
 
     <head data-cast-api-enabled="true">
+        <title>Vudit</title>
+        <!-- common css -->
         <link rel="stylesheet" href="css/video-js.css" />
         <link rel="stylesheet" href="css/contextmenu.css" />
         <link rel="stylesheet" href="css/seek-buttons.css" />
         <link rel="stylesheet" href="css/airplay.css" />
         <link rel="stylesheet" href="css/chromecast.css" />
         <link rel="stylesheet" href="css/skin.css" />
+        <link rel="stylesheet" href="css/quality-selector.css" />
+        <!-- audio specific -->
         <link rel="stylesheet" href="css/visualize.css" />
     </head>
 
-    <body style="background-color:#000;padding:0px;margin:0px;">
+    <body style="background-color:#000;">
         <div id="visualize"></div>
-        <audio id="my-audio" class="video-js vjs-fill vjs-v7" preload="auto" controls autoplay
+        <audio id="my-player" class="video-js vjs-fill vjs-v7" preload="auto" controls autoplay
             x-webkit-airplay="true"></audio>
         <script>
             window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = { preloadWebComponents: true };
             require('electron-chromecast');
         </script>
+        <!-- common js -->
         <script src="js/video.js"></script>
         <script src="js/airplay.js"></script>
         <script src="js/chromecast.js"></script>
-        <script src="js/flv.js"></script>
         <script src="js/seek-buttons.js"></script>
         <script src="js/contextmenu.js"></script>
+        <script src="js/streaming.js"></script>
+        <!-- conversion stuff -->
+        <script src="js/mux.min.js"></script>
+        <script src="js/ffmpeg.min.js"></script>
+        <script src="js/rxjs.umd.js"></script>
+        <script src="js/convert.js"></script>
+        <!-- audio specific -->
         <script src="js/visualize.js"></script>
 
         <script>
             const skipDuration = 10;
+            function handleError(e) {
+                //handle MEDIA_ERR_SRC_NOT_SUPPORTED
+                if (e.target.error.code == 4) {
+                    player.errorDisplay.close();
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    // fallback to convert and play using ffmpeg
+                    convertAndStream(filePath, mediaEle);
+                }
+            }
             function createSvg(parent, height, width) {
                 return d3.select(parent).append('svg').attr('height', height).attr('width', width);
             }
@@ -49,31 +70,21 @@
                     });
                 anim = requestAnimationFrame(renderChart);
             }
-            let audioEle = document.getElementById('my-audio');
-            audioEle.addEventListener("error", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-            });
+            let mediaEle = document.getElementById('my-player');
+            mediaEle.addEventListener("error", handleError);
             let filePath = common.getParameterByName('file');
-            audioEle.src = filePath;
-            let player = videojs('my-audio', {
+            mediaEle.src = filePath;
+            let player = videojs('my-player', {
+                responsive: true,
                 bigPlayButton: true,
-                techOrder: ['chromecast', 'html5', 'Flvjs'],
+                techOrder: ['chromecast', 'html5'],
                 techCanOverridePoster: true,
                 playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
                 userActions: { hotkeys: true },
-                controlBar: { pictureInPictureToggle: true },
-                flvjs: {
-                    mediaDataSource: {
-                        isLive: false,
-                        cors: false,
-                        withCredentials: false,
-                    },
-                },
             });
-            player.responsive(true);
             player.airplayButton();
+            player.qualityLevels();
+            player.dashHlsBitrateSwitcher({ showInfo: false, support: "both" });
             player.seekButtons({ forward: skipDuration, back: skipDuration });
             player.chromecast({ appId: 'Vudit', receiverAppID: 'Vudit', addButtonToControlBar: true });
             player.contextmenuUI({
@@ -100,13 +111,14 @@
                 }
             });
             let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            let audioSrc = audioCtx.createMediaElementSource(audioEle);
+            let audioSrc = audioCtx.createMediaElementSource(mediaEle);
             let analyser = audioCtx.createAnalyser();
             audioSrc.connect(analyser);
             audioSrc.connect(audioCtx.destination);
             let frequencyData = new Uint8Array(analyser.frequencyBinCount);
-            let svgHeight = window.innerHeight;
-            let svgWidth = window.innerWidth;
+            let playerDiv = document.getElementsByClassName('video-js')[0];
+            let svgHeight = playerDiv.offsetHeight;
+            let svgWidth = playerDiv.offsetWidth;
             let barPadding = '1';
             let visualize = document.getElementById('visualize');
             let svg = createSvg('#visualize', svgHeight, svgWidth);

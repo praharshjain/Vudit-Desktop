@@ -2,15 +2,17 @@
 
     <head data-cast-api-enabled="true">
         <title>Vudit</title>
+        <!-- common css -->
         <link rel="stylesheet" href="css/video-js.css" />
         <link rel="stylesheet" href="css/contextmenu.css" />
         <link rel="stylesheet" href="css/seek-buttons.css" />
         <link rel="stylesheet" href="css/airplay.css" />
         <link rel="stylesheet" href="css/chromecast.css" />
         <link rel="stylesheet" href="css/skin.css" />
+        <link rel="stylesheet" href="css/quality-selector.css" />
+        <!-- video specific -->
         <link rel="stylesheet" href="css/zoom.css" />
         <link rel="stylesheet" href="css/panorama.css" />
-        <link rel="stylesheet" href="css/quality-selector.css" />
         <link rel="stylesheet" href="css/snapshot.css" />
     </head>
 
@@ -20,24 +22,27 @@
             window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = { preloadWebComponents: true };
             require('electron-chromecast');
         </script>
+        <!-- common js -->
         <script src="js/video.js"></script>
         <script src="js/airplay.js"></script>
         <script src="js/chromecast.js"></script>
-        <script src="js/zoom.js"></script>
         <script src="js/seek-buttons.js"></script>
         <script src="js/contextmenu.js"></script>
-        <script src="js/three.js"></script>
-        <script src="js/panorama.js"></script>
         <script src="js/streaming.js"></script>
-        <script src="js/flv.js"></script>
-        <script src="js/snapshot.js"></script>
         <!-- conversion stuff -->
         <script src="js/mux.min.js"></script>
         <script src="js/ffmpeg.min.js"></script>
         <script src="js/rxjs.umd.js"></script>
         <script src="js/convert.js"></script>
+        <!-- video specific -->
+        <script src="js/zoom.js"></script>
+        <script src="js/three.js"></script>
+        <script src="js/panorama.js"></script>
+        <script src="js/flv.js"></script>
+        <script src="js/snapshot.js"></script>
 
         <script>
+            //common stuff
             const skipDuration = 10;
             function handleError(e) {
                 //handle MEDIA_ERR_SRC_NOT_SUPPORTED
