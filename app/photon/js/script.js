@@ -1,7 +1,8 @@
 const previewFrame = document.getElementById('preview-file'),
     filesTable = document.getElementById('files-table'),
     gridViewBtn = document.getElementById('enable-grid-view'),
-    listViewBtn = document.getElementById('enable-list-view');
+    listViewBtn = document.getElementById('enable-list-view'),
+    fileListingClass = 'file-listing-item';
 
 //file listing stuff
 const tableBody = document.getElementById('files-list');
@@ -43,6 +44,11 @@ function getRow(fileObj) {
     let name = document.createElement('td');
     name.innerText = fileObj.name;
     name.setAttribute('class', 'file-name');
+    let optionsBtn = document.createElement('button');
+    optionsBtn.setAttribute('class', 'icon icon-dot-3 file-options');
+    optionsBtn.setAttribute('onclick', 'showOptionsMenu(event)');
+    optionsBtn.value = JSON.stringify(fileObj);
+    name.appendChild(optionsBtn);
     tr.appendChild(name);
     let kind = document.createElement('td');
     kind.innerText = common.getKind(fileObj);
@@ -59,24 +65,29 @@ function getRow(fileObj) {
     tr.appendChild(time);
     tr.setAttribute('data-path', fileObj.path);
     tr.setAttribute('title', fileObj.name);
+    tr.setAttribute('class', fileListingClass);
     if (fileObj.isBackLink) {
         tr.setAttribute('id', 'backlink');
         tr.setAttribute('onclick', 'showFiles(this, "' + fileObj.path + '")');
     }
     else if (fileObj.isDir) {
-        tr.setAttribute('onclick', 'showFiles(this, "' + fileObj.path + '")');
+        tr.setAttribute('onclick', 'previewFile(this, "' + fileObj.path + '")');
+        tr.setAttribute('ondblclick', 'showFiles(this, "' + fileObj.path + '")');
     }
     else if (fileObj.isFile) {
-        tr.setAttribute('onclick', 'previewFile("' + fileObj.path + '")');
+        tr.setAttribute('onclick', 'previewFile(this, "' + fileObj.path + '")');
         tr.setAttribute('ondblclick', 'openFile("' + fileObj.name + '", "' + fileObj.path + '")');
     }
     return tr;
 }
 
 function showFiles(e, dirPath) {
+    makeAllListingsInActive(fileListingClass);
     clearPreview();
     hideOpenFiles();
-    e.classList.add('active');
+    if (e) {
+        e.classList.add('active');
+    }
     searchBar.value = '';
     currentDir = dirPath;
     footer.innerText = dirPath;
@@ -89,18 +100,22 @@ function showFiles(e, dirPath) {
 }
 
 function hideOpenFiles() {
-    makeAllListingsInActive();
+    makeAllListingsInActive('nav-group-item');
     common.ipcRenderer.sendSync('hideOpenFiles');
 }
 
-function makeAllListingsInActive() {
-    let ele = document.getElementsByClassName('nav-group-item');
+function makeAllListingsInActive(className) {
+    let ele = document.getElementsByClassName(className);
     for (let i = 0; i < ele.length; i++) {
         ele[i].classList.remove('active');
     }
 }
 
-function previewFile(path) {
+function previewFile(e, path) {
+    makeAllListingsInActive(fileListingClass);
+    if (e) {
+        e.classList.add('active');
+    }
     previewFrame.src = common.getPreviewURL(path);
 }
 
@@ -120,7 +135,7 @@ function openFile(name, path) {
 function createFileListing(name, path, url) {
     let ele = document.getElementById(url);
     if (ele && ele.parentNode == openFilesPane) {
-        makeAllListingsInActive();
+        makeAllListingsInActive('nav-group-item');
         ele.classList.add('active');
         return;
     }
@@ -153,7 +168,7 @@ function filterFiles(e) {
     let query = e.target.value;
     let listItems = document.getElementsByClassName('file-name');
     for (let i = 0; i < listItems.length; i++) {
-        if (listItems[i].innerText.includes(query)) {
+        if (listItems[i].innerText.toLowerCase().includes(query.toLowerCase())) {
             listItems[i].parentNode.classList.remove('hidden');
         } else {
             listItems[i].parentNode.classList.add('hidden');
@@ -171,4 +186,41 @@ function gridView() {
     filesTable.classList.add('grid-view');
     listViewBtn.classList.remove('active');
     gridViewBtn.classList.add('active');
+}
+
+function showOptionsMenu(event) {
+    let ele = event.target;
+    let fileObj = JSON.parse(ele.value);
+    let id = 'options-menu-' + fileObj.path;
+    let menu = document.getElementById(id);
+    if (menu) {
+        return menu.parentNode.removeChild(menu);
+    }
+    let openMenus = document.getElementsByClassName('options-menu');
+    for (let i = 0; i < openMenus.length; i++) {
+        openMenus[i].parentNode.removeChild(openMenus[i]);
+    }
+    menu = createOptions(fileObj);
+    menu.setAttribute('id', id);
+    ele.appendChild(menu);
+}
+
+function createOptions(fileObj) {
+    let menu = document.createElement('ul');
+    menu.setAttribute('class', 'list-group options-menu');
+    if (fileObj.isFile) {
+        let open = document.createElement('li');
+        open.innerText = 'Open File';
+        open.setAttribute('class', 'list-group-item');
+        open.setAttribute('onclick', 'openFile("' + fileObj.name + '", "' + fileObj.path + '")');
+        menu.appendChild(open);
+    }
+    if (fileObj.isDir) {
+        let open = document.createElement('li');
+        open.innerText = 'Open Folder';
+        open.setAttribute('class', 'list-group-item');
+        open.setAttribute('onclick', 'showFiles(null, "' + fileObj.path + '")');
+        menu.appendChild(open);
+    }
+    return menu;
 }

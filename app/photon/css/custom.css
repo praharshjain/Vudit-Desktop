@@ -15,6 +15,25 @@
     display: none;
 }
 
+.options-menu {
+    background: #fff;
+    border: solid #000;
+    float: right;
+    width: fit-content;
+    position: absolute;
+    z-index: 10000;
+}
+
+.file-options {
+    float: right;
+    border: none;
+}
+
+.table-striped tr.active {
+    color: #fff;
+    background-color: #6d6c6d;
+}
+
 .nav-group-item .float-right {
     float: right;
     margin-right: 0px !important;
