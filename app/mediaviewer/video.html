@@ -45,13 +45,7 @@
                     player.errorDisplay.close();
                     e.stopImmediatePropagation();
                     e.stopPropagation();
-                    fallbackToConversion();
-                }
-            }
-            function fallbackToConversion() {
-                // ask user if they want to convert using ffmpeg
-                let convert = confirm('Playback for this media file is not supported, do you want to attempt to convert it and play?');
-                if (convert) {
+                    // fallback to convert and play using ffmpeg
                     convertAndStream(filePath, mediaEle);
                 }
             }
