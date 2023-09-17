@@ -8,6 +8,12 @@ const previewFrame = document.getElementById('preview-file'),
 //file listing stuff
 const tableBody = document.getElementById('files-list');
 const dirPaths = common.getConfig().dirPaths;
+let supportedFileTypes = {};
+Object.keys(fileTypeMap).sort().forEach(function (k) {
+    if (fileTypeMap[k].isExt) {
+        supportedFileTypes[k] = fileTypeMap[k];
+    }
+});
 let favoritesPane = document.getElementById('sidebar-nav-pane');
 let openFilesPane = document.getElementById('sidebar-open-files-pane');
 let footer = document.getElementById('footer-text');
@@ -231,11 +237,9 @@ function createOptions(fileObj, posX, posY) {
         item = createMenuItem('Open File As', 'icon icon-shareable', '');
         let submenu = document.createElement('menu');
         submenu.setAttribute('class', 'menu');
-        for (let type in fileTypeMap) {
-            if (fileTypeMap[type].isExt) {
-                let subMenuItem = createMenuItem(type, '', 'openFileAs("' + type + '", "' + fileObj.name + '", "' + fileObj.path + '")')
-                submenu.appendChild(subMenuItem);
-            }
+        for (let type in supportedFileTypes) {
+            let subMenuItem = createMenuItem(type, '', 'openFileAs("' + type + '", "' + fileObj.name + '", "' + fileObj.path + '")')
+            submenu.appendChild(subMenuItem);
         }
         item.classList.add('submenu');
         item.appendChild(submenu);
