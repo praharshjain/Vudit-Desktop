@@ -49,8 +49,8 @@ function fileNameToIcon(path) {
     return '../../' + iconPath;
 }
 
-function openFile(path) {
-    return ipcRenderer.sendSync('openFile', path);
+function openFile(path, type) {
+    return ipcRenderer.sendSync('openFile', path, type);
 }
 function getPreviewURL(path) {
     return ipcRenderer.sendSync('getPreviewURL', path);

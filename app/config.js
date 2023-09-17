@@ -92,11 +92,11 @@ data.build.fileAssociations.forEach(f => {
             f.url = '/markdownviewer/index.html?file=';
             break;
     }
-    fileTypeMap[f.ext] = f;
+    fileTypeMap[f.ext] = { ...f, isExt: true };
     fileTypeMap[f.mimeType] = f;
 });
 for (let ext of txtExt) {
-    fileTypeMap[ext] = { icon: '', url: '/ide/index.html?file=' };
+    fileTypeMap[ext] = { icon: '', url: '/ide/index.html?file=', isExt: true };
 }
 
 //manual overrides

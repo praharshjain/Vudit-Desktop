@@ -2,7 +2,8 @@ const previewFrame = document.getElementById('preview-file'),
     filesTable = document.getElementById('files-table'),
     gridViewBtn = document.getElementById('enable-grid-view'),
     listViewBtn = document.getElementById('enable-list-view'),
-    fileListingClass = 'file-listing-item';
+    fileListingClass = 'file-listing-item',
+    fileTypeMap = common.getConfig().fileTypeMap;
 
 //file listing stuff
 const tableBody = document.getElementById('files-list');
@@ -82,6 +83,7 @@ function getRow(fileObj) {
 }
 
 function showFiles(e, dirPath) {
+    removeMenus();
     makeAllListingsInActive(fileListingClass);
     clearPreview();
     hideOpenFiles();
@@ -112,6 +114,7 @@ function makeAllListingsInActive(className) {
 }
 
 function previewFile(e, path) {
+    removeMenus(getMenuID(path));
     makeAllListingsInActive(fileListingClass);
     if (e) {
         e.classList.add('active');
@@ -130,6 +133,12 @@ function openFile(name, path) {
     if (res.state == common.fileOpened) {
         createFileListing(name, path, res.url);
     }
+}
+
+function openFileAs(type, name, path) {
+    clearPreview();
+    hideOpenFiles();
+    common.openFile(path, type);
 }
 
 function createFileListing(name, path, url) {
@@ -191,36 +200,72 @@ function gridView() {
 function showOptionsMenu(event) {
     let ele = event.target;
     let fileObj = JSON.parse(ele.value);
-    let id = 'options-menu-' + fileObj.path;
-    let menu = document.getElementById(id);
+    let menu = document.getElementById(getMenuID(fileObj.path));
     if (menu) {
-        return menu.parentNode.removeChild(menu);
+        return;
     }
-    let openMenus = document.getElementsByClassName('options-menu');
-    for (let i = 0; i < openMenus.length; i++) {
-        openMenus[i].parentNode.removeChild(openMenus[i]);
-    }
-    menu = createOptions(fileObj);
-    menu.setAttribute('id', id);
-    ele.appendChild(menu);
+    document.body.appendChild(createOptions(fileObj, event.pageX, event.pageY));
 }
 
-function createOptions(fileObj) {
-    let menu = document.createElement('ul');
-    menu.setAttribute('class', 'list-group options-menu');
+function removeMenus(idToSkip = '') {
+    let openMenus = document.getElementsByClassName('menu');
+    for (let i = 0; i < openMenus.length; i++) {
+        if (openMenus[i].id == '' || openMenus[i].id == idToSkip) {
+            continue;
+        }
+        openMenus[i].parentNode.removeChild(openMenus[i]);
+    }
+}
+
+function getMenuID(path) {
+    return 'options-menu-' + path;
+}
+
+function createOptions(fileObj, posX, posY) {
+    let menu = document.createElement('menu');
+    menu.setAttribute('class', 'menu show-menu');
+    menu.setAttribute('id', getMenuID(fileObj.path));
     if (fileObj.isFile) {
-        let open = document.createElement('li');
-        open.innerText = 'Open File';
-        open.setAttribute('class', 'list-group-item');
-        open.setAttribute('onclick', 'openFile("' + fileObj.name + '", "' + fileObj.path + '")');
-        menu.appendChild(open);
+        let item = createMenuItem('Open File', 'icon icon-eye', 'openFile("' + fileObj.name + '", "' + fileObj.path + '")');
+        menu.appendChild(item);
+        item = createMenuItem('Open File As', 'icon icon-shareable', '');
+        let submenu = document.createElement('menu');
+        submenu.setAttribute('class', 'menu');
+        for (let type in fileTypeMap) {
+            if (fileTypeMap[type].isExt) {
+                let subMenuItem = createMenuItem(type, '', 'openFileAs("' + type + '", "' + fileObj.name + '", "' + fileObj.path + '")')
+                submenu.appendChild(subMenuItem);
+            }
+        }
+        item.classList.add('submenu');
+        item.appendChild(submenu);
+        menu.appendChild(item);
     }
     if (fileObj.isDir) {
-        let open = document.createElement('li');
-        open.innerText = 'Open Folder';
-        open.setAttribute('class', 'list-group-item');
-        open.setAttribute('onclick', 'showFiles(null, "' + fileObj.path + '")');
-        menu.appendChild(open);
+        let item = createMenuItem('Open Folder', 'icon icon-folder', 'showFiles(null, "' + fileObj.path + '")');
+        menu.appendChild(item);
     }
+    menu.style.left = posX + 'px';
+    menu.style.top = posY + 'px';
     return menu;
+}
+
+function createMenuItem(txt, icn, onClick) {
+    let item = document.createElement('li');
+    let btn = document.createElement('button');
+    btn.setAttribute('class', 'menu-btn');
+    let icon = document.createElement('i');
+    icon.setAttribute('class', icn);
+    let text = document.createElement('span');
+    text.setAttribute('class', 'menu-text');
+    text.innerText = txt;
+    item.setAttribute('class', 'menu-item');
+    if (onClick != '') {
+        item.setAttribute('onclick', onClick);
+    }
+    btn.appendChild(icon);
+    btn.appendChild(text);
+    item.appendChild(btn);
+    item.setAttribute('title', txt);
+    return item;
 }

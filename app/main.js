@@ -156,8 +156,8 @@ app.on('ready', function () {
   ipcMain.handle('listFiles', (e, dir) => {
     return listFiles(dir);
   });
-  ipcMain.on('openFile', (e, path) => {
-    e.returnValue = openFile(path);
+  ipcMain.on('openFile', (e, path, type) => {
+    e.returnValue = openFile(path, type);
   });
   ipcMain.on('restoreView', (e, path) => {
     e.returnValue = canRestoreView(path);
