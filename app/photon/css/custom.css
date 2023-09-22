@@ -22,7 +22,7 @@
 
 .table-striped tr.active {
     color: #fff;
-    background-color: #6d6c6d;
+    background-color: #6d6c6d !important;
 }
 
 .nav-group-item .float-right {
