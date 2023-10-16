@@ -459,10 +459,12 @@ function openFile(path, mimeType = '') {
   if (path == '') {
     return { state: fn.fileNotOpened, url: '' };
   }
-  //preference to extension/mime first
   let ext = fn.getFileExt(path);
   if (mimeType == '') {
     mimeType = mime.lookup(path);
+  } else {
+    //override ext based on passed mimeType (for open as)
+    ext = mimeType;
   }
   let viewerURL = getViewerURLByType(path, ext, mimeType);
   if (viewerURL != '') {
