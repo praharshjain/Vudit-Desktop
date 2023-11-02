@@ -132,6 +132,10 @@ function clearPreview() {
     previewFrame.src = '';
 }
 
+function quickLookPreview(name, path) {
+    common.quickLookPreview(name, path);
+}
+
 function openFile(name, path) {
     clearPreview();
     hideOpenFiles();
@@ -244,6 +248,10 @@ function createOptions(fileObj, posX, posY) {
         item.classList.add('submenu');
         item.appendChild(submenu);
         menu.appendChild(item);
+        if (common.isOSX()) {
+            item = createMenuItem('QuickLook Preview', 'icon icon-eye', 'quickLookPreview("' + fileObj.name + '", "' + fileObj.path + '")');
+            menu.appendChild(item);
+        }
     }
     if (fileObj.isDir) {
         let item = createMenuItem('Open Folder', 'icon icon-folder', 'showFiles(null, "' + fileObj.path + '")');

@@ -8,6 +8,10 @@ function getFileExt(filePath) {
     return filePath.substring(filePath.lastIndexOf('.') + 1, filePath.length).toLowerCase().trim();
 }
 
+function isOSX() {
+    return process.platform == 'darwin';
+}
+
 function getKind(fileObj) {
     if (fileObj.isBackLink) {
         return '-';
@@ -51,6 +55,9 @@ function fileNameToIcon(path) {
 
 function openFile(path, type) {
     return ipcRenderer.sendSync('openFile', path, type);
+}
+function quickLookPreview(name, path) {
+    return ipcRenderer.sendSync('quickLookPreview', name, path);
 }
 function getPreviewURL(path) {
     return ipcRenderer.sendSync('getPreviewURL', path);
@@ -107,6 +114,7 @@ let common = {
     fileNotOpened: fileNotOpened,
     fileOpened: fileOpened,
     fileRestored: fileRestored,
+    isOSX: isOSX,
     getKind: getKind,
     getIcon: getIcon,
     openFile: openFile,
@@ -116,6 +124,7 @@ let common = {
     getPreviewURL: getPreviewURL,
     fileNameToIcon: fileNameToIcon,
     getReadableSize: getReadableSize,
+    quickLookPreview: quickLookPreview,
     getParameterByName: getParameterByName,
     getFileNameFromPath: getFileNameFromPath,
 }

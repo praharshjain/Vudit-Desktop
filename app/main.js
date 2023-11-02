@@ -159,6 +159,9 @@ app.on('ready', function () {
   ipcMain.on('openFile', (e, path, type) => {
     e.returnValue = openFile(path, type);
   });
+  ipcMain.on('quickLookPreview', (e, name, path) => {
+    e.returnValue = quickLookPreview(name, path);
+  });
   ipcMain.on('restoreView', (e, path) => {
     e.returnValue = canRestoreView(path);
   });
@@ -239,7 +242,7 @@ app.on('ready', function () {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-  if (!isOSX()) {
+  if (!fn.isOSX()) {
     app.quit();
   }
 });
@@ -265,10 +268,6 @@ function resetWindow(window) {
     window.webContents.session.clearHostResolverCache();
     window.webContents.session.closeAllConnections();
   }
-}
-
-function isOSX() {
-  return process.platform !== 'darwin';
 }
 
 function forceSingleInstance() {
@@ -488,6 +487,9 @@ function openFile(path, mimeType = '') {
   }
 }
 
+function quickLookPreview(name, path) {
+  return mainWindow.previewFile(path, name);
+}
 
 function loadURLInWindow(win, url, path, loadInBrowserView = false) {
   if (canRestoreView(url)) {
