@@ -430,7 +430,7 @@ function handleOpenFile() {
 }
 
 function getViewerURLByType(path, ext, mimeType) {
-  let baseURL = 'file://' + __dirname;
+  let baseURL = 'file://' + __dirname + '/viewer';
   path = encodeURIComponent(path);
   if (ext in config.fileTypeMap) {
     return baseURL + config.fileTypeMap[ext].url + path;
