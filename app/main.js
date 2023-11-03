@@ -488,6 +488,7 @@ function openFile(path, mimeType = '') {
 }
 
 function quickLookPreview(name, path) {
+  mainWindow.closeFilePreview();
   return mainWindow.previewFile(path, name);
 }
 
