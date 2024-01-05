@@ -1,0 +1,41 @@
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="diff.css" media="screen and (prefers-color-scheme: light)" />
+    <link rel="stylesheet" href="diff-dark.css" media="screen and (prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="diff2html.css" />
+    <script type="text/javascript" src="diff.js"></script>
+</head>
+
+<body>
+    <div id="show-diff"></div>
+</body>
+<script>
+    let configuration = {
+        fileListToggle: true,
+        fileListStartVisible: true,
+        fileContentToggle: true,
+        matching: 'lines',
+        outputFormat: 'side-by-side',
+        synchronisedScroll: true,
+        highlight: true,
+        renderNothingWhenEmpty: false,
+        colorScheme: 'light',
+    };
+    let targetElement = document.getElementById('show-diff');
+    let filePath = common.getParameterByName('file');
+    function readFile(filePath) {
+        let rawFile = new XMLHttpRequest();
+        rawFile.open("GET", filePath, false);
+        rawFile.onreadystatechange = function () {
+            if (rawFile.readyState === 4) {
+                if (rawFile.status === 200 || rawFile.status == 0) {
+                    let diff2htmlUi = new Diff2HtmlUI(targetElement, rawFile.responseText, configuration);
+                    diff2htmlUi.draw();
+                    diff2htmlUi.highlightCode();
+                }
+            }
+        }
+        rawFile.send(null);
+    }
+    readFile(filePath);
+</script>

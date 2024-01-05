@@ -58,6 +58,7 @@ let txtExt = [
     'gitignore',
     'gradle',
     'lock',
+    'diff',
 ];
 
 let fileTypeMap = {};
@@ -114,6 +115,7 @@ fileTypeMap['djvu'].url = '/djvuviewer/index.html?file=';
 fileTypeMap['docx'].url = '/docxviewer/index.html?file=';
 fileTypeMap['ipynb'].url = '/ipynbviewer/index.html?file=';
 fileTypeMap['sqlite'].url = '/sqliteviewer/index.html?file=';
+fileTypeMap['diff'].url = '/diffviewer/index.html?file=';
 
 
 //directory paths
