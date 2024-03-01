@@ -65,6 +65,7 @@
         "asar": true,
         "compression": "maximum",
         "copyright": "Copyright © Praharsh Jain, 2023",
+        "npmRebuild": false,
         "includePdb": true,
         "icon": "icon.png",
         "dmg": {
