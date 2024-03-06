@@ -45,7 +45,7 @@
     "copyright": "Copyright © Praharsh Jain, 2023",
     "devDependencies": {
         "electron": "^29.1.0",
-        "electron-builder": "^24.12.0"
+        "electron-builder": "^24.13.3"
     },
     "dependencies": {
         "adm-zip": "^0.5.10",
