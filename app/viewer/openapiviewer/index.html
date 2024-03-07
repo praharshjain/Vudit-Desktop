@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Swagger Editor</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: Roboto, sans-serif;
+                font-size: 9px;
+                line-height: 1.42857143;
+                color: #444;
+                margin: 0px;
+            }
+
+            #swagger-editor {
+                font-size: 1.3em;
+            }
+
+            .container {
+                height: 100%;
+                max-width: 880px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            #editor-wrapper {
+                height: 100%;
+                border: 1em solid #000;
+                border: none;
+            }
+
+            .Pane2 {
+                overflow-y: scroll;
+            }
+
+            .swagger-editor-standalone {
+                display: none;
+            }
+        </style>
+        <link rel="icon" type="image/png" href="./dist/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./dist/favicon-16x16.png" sizes="16x16" />
+
+        <link href="swagger-editor.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="swagger-editor" style="display:none"></div>
+        <script src="swagger-editor-bundle.js"> </script>
+        <script src="swagger-editor-standalone-preset.js"> </script>
+        <script>
+            function readFile(filePath) {
+                let rawFile = new XMLHttpRequest();
+                rawFile.open("GET", filePath, false);
+                rawFile.onreadystatechange = function () {
+                    if (rawFile.readyState === 4) {
+                        if (rawFile.status === 200 || rawFile.status == 0) {
+                            let aceEditor = ace.edit("ace-editor");
+                            aceEditor.setValue(rawFile.responseText);
+                            aceEditor.gotoLine(1, 1, true);
+                            aceEditor.setReadOnly(true);
+                            document.getElementById('swagger-editor').style.display = 'block';
+                        }
+                    }
+                }
+                rawFile.send(null);
+            }
+            const filePath = common.getParameterByName('file');
+            const editor = SwaggerEditorBundle({
+                dom_id: '#swagger-editor',
+                layout: 'StandaloneLayout',
+                presets: [
+                    SwaggerEditorStandalonePreset
+                ],
+                queryConfigEnabled: true
+            })
+            window.editor = editor;
+            window.onload = function () {
+                readFile(filePath);
+            }
+        </script>
+    </body>
+
+</html>

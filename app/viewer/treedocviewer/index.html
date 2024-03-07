@@ -10,21 +10,41 @@
     </head>
 
     <body>
-        <div id="app"></div>
+        <div id="app" style="display: none;"></div>
         <script src="js/vendors.js"></script>
         <script src="js/app.js"></script>
         <script>
+            function isJSONSchema(text) {
+                let obj = JSON.parse(text);
+                if (obj['$schema']) {
+                    return true;
+                }
+                return false;
+            }
+            function isOpenAPI(text) {
+                let obj = JSON.parse(text);
+                if (obj && (obj['openapi'] || obj['swagger']) && obj['paths']) {
+                    return true;
+                }
+                //TODO: check for yaml
+                return false;
+            }
             const filePath = common.getParameterByName('file');
             document.title = 'Vudit - ' + filePath;
             fetch(filePath)
                 .then(function (response) {
                     response.text().then(function (text) {
                         let obj = JSON.parse(text);
-                        if (obj['$schema']) {
+                        if (isOpenAPI(text)) {
+                            // redirect if its a open api spec
+                            window.location = '../openapiviewer/index.html?file=' + filePath;
+                        } else if (isJSONSchema(text)) {
                             // redirect if its a json schema
                             window.location = '../jsonschemaviewer/index.html?file=' + filePath;
+                        } else {
+                            tdv.jsonStr = text;
+                            document.getElementById('app').style.display = 'block';
                         }
-                        tdv.jsonStr = text;
                     });
                 });
         </script>
