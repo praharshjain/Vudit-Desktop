@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>JSON Schema Viewer</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="json-schema-viewer.min.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <div id="loading">
+            <div id="preload"><img src="loader.gif" alt="Loading..." />
+                <br />
+                Loading...
+            </div>
+        </div>
+        <div id="main-body">
+            <div id="zoom-controls">
+                <a id="zoom_in" href="#" title="Zoom In">Zoom-in</a>
+                <a id="zoom_out" href="#" title="Zoom Out">Zoom-out</a>
+                <div id="tree-controls">
+                    <a id="reset-tree" href="#" title="Reset">Reset</a>
+                </div>
+            </div>
+            <div id="legend-container">
+                <div id="legend">
+                    <h3 class="ui-mini">Legend</h3>
+                    <hr />
+                    <div id="legend-items">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type='text/javascript' src="jquery.min.js"></script>
+        <script type='text/javascript' src="json-schema-viewer.min.js"></script>
+        <script type='text/javascript'>
+            (function ($) {
+                const filePath = common.getParameterByName('file');
+                JSV.init({
+                    schema: filePath,
+                    plain: true, //don't use JQM
+                    viewerHeight: $('#main-body').height(), //set initial dimensions of SVG
+                    viewerWidth: $('#main-body').width()
+                }, function () {
+                    $('#jsv-tree').css('width', '100%');
+                    //set diagram width to 100%, this DOES NOT resize the svg container
+                    //it will not adjust to window resize, needs a listener to support that
+                    JSV.resetViewer();
+                    $('#loading').fadeOut('slow');
+                });
+            })(jQuery);
+        </script>
+    </body>
+
+</html>

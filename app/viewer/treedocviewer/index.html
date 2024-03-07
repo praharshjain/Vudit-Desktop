@@ -19,6 +19,11 @@
             fetch(filePath)
                 .then(function (response) {
                     response.text().then(function (text) {
+                        let obj = JSON.parse(text);
+                        if (obj['$schema']) {
+                            // redirect if its a json schema
+                            window.location = '../jsonschemaviewer/index.html?file=' + filePath;
+                        }
                         tdv.jsonStr = text;
                     });
                 });
