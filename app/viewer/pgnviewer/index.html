@@ -14,7 +14,7 @@
             layout = 'left';
             boardSize = ((window.innerWidth / 2) + 100) + 'px';
         }
-        const filePath = common.getParameterByName('file');
+        const filePath = common.getCurrentFilePath();
         PGNV.pgnView('board', {
             pgnFile: filePath,
             pieceStyle: 'alpha',

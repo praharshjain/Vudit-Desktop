@@ -69,7 +69,7 @@
                 }
                 rawFile.send(null);
             }
-            const filePath = common.getParameterByName('file');
+            const filePath = common.getCurrentFilePath();
             const editor = SwaggerEditorBundle({
                 dom_id: '#swagger-editor',
                 layout: 'StandaloneLayout',

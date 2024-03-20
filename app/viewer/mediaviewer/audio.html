@@ -72,7 +72,7 @@
             }
             let mediaEle = document.getElementById('my-player');
             mediaEle.addEventListener("error", handleError);
-            let filePath = common.getParameterByName('file');
+            let filePath = common.getCurrentFilePath();
             mediaEle.src = filePath;
             let player = videojs('my-player', {
                 responsive: true,

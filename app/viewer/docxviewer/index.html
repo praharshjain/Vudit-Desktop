@@ -1,8 +1,10 @@
 <html lang="en">
+
     <head>
         <meta charset="UTF-8">
         <title>DocxJS</title>
     </head>
+
     <body>
         <div id="loaded-layout" style="width:100%;"></div>
         <!-- Insert this line above script imports  -->
@@ -15,40 +17,30 @@
         <script type="text/javascript" src="scripts/jquery.js"></script>
         <script type="text/javascript" src="scripts/docxjs.min.js"></script>
         <script>
-        function getParameterByName(name, url) {
-            if (!url) {
-                url = window.location.href;
-            }
-            name = name.replace(/[\[\]]/g, "\\$&");
-            let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
-        $(document).ready(function(){
-            var path = getParameterByName('file');
-            var docx_file = new File(path, 'file');
-            var docxJS = new DocxJS();
-            docxJS.parse(
-                docx_file,
-                function () {
-                    docxJS.render($('#loaded-layout')[0], function (result) {
-                        if (result.isError) {
-                            console.log(result.msg);
-                        } else {
-                            console.log("Success Render");
-                        }
-                    });
-                }, function (e) {
-                    console.log("Error!", e);
-                }
-            );
-        });
+            $(document).ready(function () {
+                var path = common.getCurrentFilePath();
+                var docx_file = new File(path, 'file');
+                var docxJS = new DocxJS();
+                docxJS.parse(
+                    docx_file,
+                    function () {
+                        docxJS.render($('#loaded-layout')[0], function (result) {
+                            if (result.isError) {
+                                console.log(result.msg);
+                            } else {
+                                console.log("Success Render");
+                            }
+                        });
+                    }, function (e) {
+                        console.log("Error!", e);
+                    }
+                );
+            });
         </script>
         <!-- Insert this line after script imports -->
         <script>
             if (window.module) module = window.module;
         </script>
     </body>
+
 </html>

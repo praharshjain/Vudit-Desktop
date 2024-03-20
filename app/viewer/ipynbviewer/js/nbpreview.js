@@ -57,6 +57,6 @@
         rawFile.send(null);
     }
 
-    const filePath = common.getParameterByName('file');
+    const filePath = common.getCurrentFilePath();
     readFile(filePath);
 }).call(this);

@@ -88,7 +88,7 @@
                 }; (function () {
                     f(); b && (g.initialize(), document.exitFullscreen || document.cancelFullScreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.webkitCancelFullScreen || document.msExitFullscreen || (document.getElementById("fullscreen").style.visibility = "hidden", document.getElementById("presentation").style.visibility = "hidden"), p("overlayCloseButton", g.toggleFullScreen), p("fullscreen", g.toggleFullScreen), p("presentation", function () {
                         D ||
-                        g.toggleFullScreen(); g.togglePresentationMode()
+                            g.toggleFullScreen(); g.togglePresentationMode()
                     }), document.addEventListener("fullscreenchange", B), document.addEventListener("webkitfullscreenchange", B), document.addEventListener("mozfullscreenchange", B), document.addEventListener("MSFullscreenChange", B), p("download", g.download), p("zoomOut", g.zoomOut), p("zoomIn", g.zoomIn), p("previous", g.showPreviousPage), p("next", g.showNextPage), p("previousPage", g.showPreviousPage), p("nextPage", g.showNextPage), document.getElementById("pageNumber").addEventListener("change",
                         function () { g.showPage(this.value) }), document.getElementById("scaleSelect").addEventListener("change", function () { a(this.value) }), h.addEventListener("click", t), n.addEventListener("click", t), h.addEventListener("click", u), C.addEventListener("click", l), G.addEventListener("click", l), window.addEventListener("scalechange", function (a) { var b = document.getElementById("customScaleOption"), c = x(String(a.scale)); b.selected = !1; c || (b.textContent = Math.round(1E4 * a.scale) / 100 + "%", b.selected = !0) }, !0), window.addEventListener("resize",
                             function (b) { L && (document.getElementById("pageWidthOption").selected || document.getElementById("pageAutoOption").selected) && a(document.getElementById("scaleSelect").value); t() }), window.addEventListener("keydown", function (a) {
@@ -104,15 +104,15 @@
                         a); return b
                 } function x(a) { a = a.split("?")[0].split(".").pop(); var b = r(a); b && console.log("Found plugin by file extension from path: " + a); return b } function s(a) { var b = {}; (a.search || "?").substr(1).split("&").forEach(function (a) { a && (a = a.split("=", 2), b[decodeURIComponent(a[0])] = decodeURIComponent(a[1])) }); return b } var k, q = [function () {
                     var a = "application/vnd.oasis.opendocument.text application/vnd.oasis.opendocument.text-flat-xml application/vnd.oasis.opendocument.text-template application/vnd.oasis.opendocument.presentation application/vnd.oasis.opendocument.presentation-flat-xml application/vnd.oasis.opendocument.presentation-template application/vnd.oasis.opendocument.spreadsheet application/vnd.oasis.opendocument.spreadsheet-flat-xml application/vnd.oasis.opendocument.spreadsheet-template".split(" "),
-                    b = "odt fodt ott odp fodp otp ods fods ots".split(" "); return { supportsMimetype: function (b) { return -1 !== a.indexOf(b) }, supportsFileExtension: function (a) { return -1 !== b.indexOf(a) }, path: "./ODFViewerPlugin", getClass: function () { return ODFViewerPlugin } }
+                        b = "odt fodt ott odp fodp otp ods fods ots".split(" "); return { supportsMimetype: function (b) { return -1 !== a.indexOf(b) }, supportsFileExtension: function (a) { return -1 !== b.indexOf(a) }, path: "./ODFViewerPlugin", getClass: function () { return ODFViewerPlugin } }
                 }(), { supportsMimetype: function (a) { return "application/pdf" === a }, supportsFileExtension: function (a) { return "pdf" === a }, path: "./PDFViewerPlugin", getClass: function () { return PDFViewerPlugin } }]; window.onload = function () {
                     var a = document.location.hash.substring(1), e = s(document.location),
-                    c; a ? (e.title || (e.title = a.replace(/^.*[\\\/]/, "")), e.documentUrl = a, b(a, function (b) { b || (b = e.type ? f(e.type) : x(a)); b ? "undefined" !== String(typeof loadPlugin) ? loadPlugin(b.path, function () { c = b.getClass(); new Viewer(new c, e) }) : (c = b.getClass(), new Viewer(new c, e)) : new Viewer })) : new Viewer
+                        c; a ? (e.title || (e.title = a.replace(/^.*[\\\/]/, "")), e.documentUrl = a, b(a, function (b) { b || (b = e.type ? f(e.type) : x(a)); b ? "undefined" !== String(typeof loadPlugin) ? loadPlugin(b.path, function () { c = b.getClass(); new Viewer(new c, e) }) : (c = b.getClass(), new Viewer(new c, e)) : new Viewer })) : new Viewer
                 }; k = document.createElementNS(document.head.namespaceURI, "style"); k.setAttribute("media", "screen"); k.setAttribute("type", "text/css"); k.appendChild(document.createTextNode(viewer_css)); document.head.appendChild(k); k = document.createElementNS(document.head.namespaceURI,
                     "style"); k.setAttribute("media", "only screen and (max-device-width: 800px) and (max-device-height: 800px)"); k.setAttribute("type", "text/css"); k.setAttribute("viewerTouch", "1"); k.appendChild(document.createTextNode(viewerTouch_css)); document.head.appendChild(k)
             })();
 
-//]]>
+            //]]>
         </script>
     </head>
 
@@ -184,19 +184,8 @@
         <script src="webodf.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript" charset="utf-8">
             document.getElementById("toolbarRight").setAttribute("style", "visibility:hidden;");
-            function getParameterByName(name, url) {
-                if (!url) {
-                    url = window.location.href;
-                }
-                name = name.replace(/[\[\]]/g, "\\$&");
-                let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                    results = regex.exec(url);
-                if (!results) return null;
-                if (!results[2]) return '';
-                return decodeURIComponent(results[2].replace(/\+/g, " "));
-            }
             var odfcanvas = new odf.OdfCanvas(document.getElementById("canvas"));
-            odfcanvas.load(getParameterByName('file'));
+            odfcanvas.load(common.getCurrentFilePath());
         </script>
     </body>
 

@@ -19,7 +19,7 @@
         <script src="js/djvu.js"></script>
         <script src="js/djvu_viewer.js"></script>
         <script>
-            let filePath = common.getParameterByName('file');
+            let filePath = common.getCurrentFilePath();
             let viewer = new DjVu.Viewer();
             viewer.configure({
                 viewMode: 'continuous',

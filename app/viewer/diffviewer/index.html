@@ -22,7 +22,7 @@
         colorScheme: 'light',
     };
     let targetElement = document.getElementById('show-diff');
-    let filePath = common.getParameterByName('file');
+    let filePath = common.getCurrentFilePath();
     function readFile(filePath) {
         let rawFile = new XMLHttpRequest();
         rawFile.open("GET", filePath, false);

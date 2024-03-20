@@ -89,6 +89,10 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function getCurrentFilePath() {
+    return getParameterByName('file');
+}
+
 function getFileNameFromPath(path) {
     let pos = path.lastIndexOf('/');
     if (pos > 0) {
@@ -125,6 +129,7 @@ let common = {
     fileNameToIcon: fileNameToIcon,
     getReadableSize: getReadableSize,
     quickLookPreview: quickLookPreview,
+    getCurrentFilePath: getCurrentFilePath,
     getParameterByName: getParameterByName,
     getFileNameFromPath: getFileNameFromPath,
 }
@@ -163,7 +168,7 @@ if (typeof document != 'undefined') {
         let styleSheet = document.createElement("style");
         styleSheet.innerText = css;
         document.body.appendChild(styleSheet);
-        let filePath = common.getParameterByName('file');
+        let filePath = common.getCurrentFilePath();
         if (filePath) {
             document.title = 'Vudit - ' + filePath;
         } else {

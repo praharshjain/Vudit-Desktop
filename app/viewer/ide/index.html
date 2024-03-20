@@ -84,7 +84,7 @@
             editor.setReadOnly(true);
             document.getElementById('editor').style.fontSize = '13px';
             let modelist = ace.require("ace/ext/modelist");
-            let filePath = common.getParameterByName('file');
+            let filePath = common.getCurrentFilePath();
             let mode = modelist.getModeForPath(filePath).mode;
             editor.session.setMode(mode);
             let StatusBar = ace.require("ace/ext/statusbar").StatusBar;

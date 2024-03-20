@@ -18,7 +18,7 @@
             element: document.getElementById('markdown-txt'),
         });
         easyMDE.toggleSideBySide();
-        const filePath = common.getParameterByName('file');
+        const filePath = common.getCurrentFilePath();
         fetch(filePath)
             .then(function (response) {
                 response.text().then(function (text) {

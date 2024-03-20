@@ -5,11 +5,11 @@
  * Source:  https://github.com/zohooo/jaxedit
  */
 
-window.jaxedit = (function($){
+window.jaxedit = (function ($) {
   var gatepath = "",
-      mathname = "MathJax.js?config=TeX-AMS_HTML",
-      mathpath = "",
-      shareurl = "";
+    mathname = "MathJax.js?config=TeX-AMS_HTML",
+    mathpath = "",
+    shareurl = "";
 
   return {
     autoScroll: false,
@@ -33,48 +33,48 @@ window.jaxedit = (function($){
     },
 
     childs: {
-      html : document.documentElement,
-      body : document.body,
-      wrap : document.getElementById("wrap"),
-      head : document.getElementById("head"),
-      example : document.getElementById("example"),
-      newbtn : document.getElementById("newbtn"),
-      openbtn : document.getElementById("openbtn"),
-      savebtn : document.getElementById("savebtn"),
-      presbtn : document.getElementById("presbtn"),
-      main : document.getElementById("main"),
-      left : document.getElementById("left"),
-      ltop : document.getElementById("ltop"),
-      source : document.getElementById("source"),
-      codearea : document.getElementById("codearea"),
-      lbot : document.getElementById("lbot"),
-      resizer : document.getElementById("resizer"),
-      right : document.getElementById("right"),
-      rtop : document.getElementById("rtop"),
-      preview : document.getElementById("preview"),
-      showarea : document.getElementById("showarea"),
-      rbot : document.getElementById("rbot")
+      html: document.documentElement,
+      body: document.body,
+      wrap: document.getElementById("wrap"),
+      head: document.getElementById("head"),
+      example: document.getElementById("example"),
+      newbtn: document.getElementById("newbtn"),
+      openbtn: document.getElementById("openbtn"),
+      savebtn: document.getElementById("savebtn"),
+      presbtn: document.getElementById("presbtn"),
+      main: document.getElementById("main"),
+      left: document.getElementById("left"),
+      ltop: document.getElementById("ltop"),
+      source: document.getElementById("source"),
+      codearea: document.getElementById("codearea"),
+      lbot: document.getElementById("lbot"),
+      resizer: document.getElementById("resizer"),
+      right: document.getElementById("right"),
+      rtop: document.getElementById("rtop"),
+      preview: document.getElementById("preview"),
+      showarea: document.getElementById("showarea"),
+      rbot: document.getElementById("rbot")
     },
 
     scrollers: {
-      codelength : 0,
-      codechange : 0,
-      codescroll : 0,
-      showscroll : 0,
-      showheight : 1,
-      divheights : []
+      codelength: 0,
+      codechange: 0,
+      codescroll: 0,
+      showscroll: 0,
+      showheight: 1,
+      divheights: []
     },
 
     textdata: {
-      oldtextvalue : "", oldtextsize : 0, oldselstart : 0, oldselend : 0, oldseltext : "",
-      newtextvalue : "", newtextsize : 0, newselstart : 0, newselend : 0, newseltext : ""
+      oldtextvalue: "", oldtextsize: 0, oldselstart: 0, oldselend: 0, oldseltext: "",
+      newtextvalue: "", newtextsize: 0, newselstart: 0, newselend: 0, newseltext: ""
     },
 
-    getOptions: function() {
+    getOptions: function () {
       var options = this.options, agent = $.agent, browser = agent.browser, version = agent.version;
 
-      if (browser == "chrome" || (browser == "firefox" && version >= 3) || (browser == "msie" && version >=8)
-                              || (browser == "safari" && version >= 5.2) || (browser == "opera" && version >= 9)) {
+      if (browser == "chrome" || (browser == "firefox" && version >= 3) || (browser == "msie" && version >= 8)
+        || (browser == "safari" && version >= 5.2) || (browser == "opera" && version >= 9)) {
         if (!$.has("touch")) {
           options.highlight = true;
         }
@@ -85,7 +85,7 @@ window.jaxedit = (function($){
       var qs = location.search.length > 0 ? location.search.substring(1) : "";
       var items = qs.split("&"), pair, name, value;
 
-      for (var i=0; i<items.length; i++) {
+      for (var i = 0; i < items.length; i++) {
         pair = items[i].split("=");
         if (pair.length == 1) {
           var id = parseInt(pair[0]);
@@ -123,27 +123,27 @@ window.jaxedit = (function($){
       if (/jaxedit/.test(location.hostname)) this.trustHost = true;
     },
 
-    doResize: function(clientX) {
+    doResize: function (clientX) {
       var that = this;
       var childs = that.childs,
-          html = childs.html,
-          body = childs.body,
-          left = childs.left,
-          resizer = childs.resizer,
-          right = childs.right,
-          preview = childs.preview,
-          showarea = childs.showarea;
+        html = childs.html,
+        body = childs.body,
+        left = childs.left,
+        resizer = childs.resizer,
+        right = childs.right,
+        preview = childs.preview,
+        showarea = childs.showarea;
 
       var pageWidth = window.innerWidth;
       var pageHeight = window.innerHeight;
-      if (typeof pageWidth != "number" ){
-         if (document.compatMode == "CSS1Compat"){
-            pageWidth = document.documentElement.clientWidth;
-            pageHeight = document.documentElement.clientHeight;
-         } else {
-            pageWidth = document.body.clientWidth;
-            pageHeight = document.body.clientHeight;
-         }
+      if (typeof pageWidth != "number") {
+        if (document.compatMode == "CSS1Compat") {
+          pageWidth = document.documentElement.clientWidth;
+          pageHeight = document.documentElement.clientHeight;
+        } else {
+          pageWidth = document.body.clientWidth;
+          pageHeight = document.body.clientHeight;
+        }
       }
 
       if (typeof clientX == "number") { // resizer
@@ -162,21 +162,21 @@ window.jaxedit = (function($){
       if (pageWidth > 540 && (view == "code" || view == "show")) {
         this.view = "half";
       } else if (pageWidth <= 540 && (view == "half" || view == "quad") && !($.agent.browser == "msie" && $.agent.version < 9)) {
-        if (view == "quad") setTimeout(function(){typejax.updater.initMode("full");}, 0);
+        if (view == "quad") setTimeout(function () { typejax.updater.initMode("full"); }, 0);
         this.view = "code";
       }
 
       html.id = "view-" + this.view;
     },
 
-    loadEditor: function() {
+    loadEditor: function () {
       var that = this;
       if (this.options.highlight) {
         $.loadStyles("library/codemirror/lib/codemirror.css");
-        $.loadScript("editor/textarea/colorful.js", function(){
-          $.loadScript("library/codemirror/lib/codemirror.js", function(){
-            $.loadScript("library/codemirror/mode/stex/stex.js", function(){
-              $.loadScript("library/codemirror/addon/edit/matchbrackets.js", function(){
+        $.loadScript("editor/textarea/colorful.js", function () {
+          $.loadScript("library/codemirror/lib/codemirror.js", function () {
+            $.loadScript("library/codemirror/mode/stex/stex.js", function () {
+              $.loadScript("library/codemirror/addon/edit/matchbrackets.js", function () {
                 that.addEditor();
                 that.hasEditor = true;
                 that.initialize();
@@ -185,7 +185,7 @@ window.jaxedit = (function($){
           });
         });
       } else {
-        $.loadScript("editor/textarea/simple.js", function(){
+        $.loadScript("editor/textarea/simple.js", function () {
           that.addEditor();
           that.hasEditor = true;
           that.initialize();
@@ -193,7 +193,7 @@ window.jaxedit = (function($){
       }
     },
 
-    loadParser: function() {
+    loadParser: function () {
       var that = this;
       var script = document.createElement("script");
       script.type = "text/x-mathjax-config";
@@ -206,8 +206,8 @@ window.jaxedit = (function($){
       document.body.appendChild(script);
 
       $.loadStyles("typejax/typejax.css");
-      $.loadScript("typejax/typejax.js", function(){
-        $.loadScript(mathpath + mathname, function(){
+      $.loadScript("typejax/typejax.js", function () {
+        $.loadScript(mathpath + mathname, function () {
           MathJax.Hub.processUpdateTime = 200;
           MathJax.Hub.processUpdateDelay = 15;
           that.hasParser = true;
@@ -217,21 +217,21 @@ window.jaxedit = (function($){
       });
     },
 
-    initialize: function() {
+    initialize: function () {
       if (this.hasEditor && this.hasParser) {
         this.initEditor();
         this.bindView();
       }
     },
 
-    initEditor: function(value) {
+    initEditor: function (value) {
       var childs = this.childs,
-          codearea = childs.codearea,
-          lbot = childs.lbot,
-          showarea = childs.showarea;
+        codearea = childs.codearea,
+        lbot = childs.lbot,
+        showarea = childs.showarea;
       var editor = this.editor,
-          scrollers = this.scrollers,
-          data = this.textdata;
+        scrollers = this.scrollers,
+        data = this.textdata;
       var highlight = this.options.highlight;
 
       if (!highlight && $.agent.browser == "msie") codearea.setActive();
@@ -263,7 +263,7 @@ window.jaxedit = (function($){
       editor.setReadOnly(false);
     },
 
-    addHooks: function() {
+    addHooks: function () {
       var childs = this.childs, showarea = childs.showarea, updater = typejax.updater;
 
       function resizeShow(isAll) {
@@ -273,7 +273,7 @@ window.jaxedit = (function($){
 
         showarea.style.width = "20px";
         var mw = source.clientWidth, cw = showarea.clientWidth, sw = showarea.scrollWidth,
-        size = Math.max(Math.min(sw + 30, 0.618 * mw), 0.382 * mw);
+          size = Math.max(Math.min(sw + 30, 0.618 * mw), 0.382 * mw);
         right.style.width = size + "px";
         preview.style.width = (size - 6) + "px";
         showarea.style.width = (size - 8) + "px";
@@ -295,7 +295,7 @@ window.jaxedit = (function($){
           this.autoScroll = false;
           showarea.childNodes[start].scrollIntoView(true);
           showarea.scrollTop -= 60;
-          setTimeout(function(){jaxedit.autoScroll = true;}, 500); // after scroll event
+          setTimeout(function () { jaxedit.autoScroll = true; }, 500); // after scroll event
         }
         // for scrollbar following
         this.scrollers.showscroll = showarea.scrollTop;
@@ -307,8 +307,8 @@ window.jaxedit = (function($){
         divheights.splice(start, end - start);
         for (i = 0; i < innerdata.length; i++) {
           data = innerdata[i];
-          height = showarea.childNodes[start+i].scrollHeight;
-          divheights.splice(start+i, 0, [data.from, data.to, height]);
+          height = showarea.childNodes[start + i].scrollHeight;
+          divheights.splice(start + i, 0, [data.from, data.to, height]);
         }
         for (i = start + innerdata.length; i < totaldata.length; i++) {
           data = totaldata[i];
@@ -334,9 +334,9 @@ window.jaxedit = (function($){
       updater.addHook("After Typeset Full", this, enableFileElements);
     },
 
-    doLoad: function(tex) {
+    doLoad: function (tex) {
       var codearea = this.childs.codearea,
-          showarea = this.childs.showarea;
+        showarea = this.childs.showarea;
 
       document.getElementById("version").innerHTML =
         (location.pathname.slice(0, 6) == "/beta/") ? "beta" : "v" + this.version;
@@ -358,7 +358,7 @@ window.jaxedit = (function($){
       this.loadParser();
     },
 
-    showWindow: function(enableShare) {
+    showWindow: function (enableShare) {
       this.doResize();
       this.childs.wrap.style.visibility = "visible";
       if (this.mode == "write") {
@@ -373,7 +373,7 @@ window.jaxedit = (function($){
       this.bindPresent();
     },
 
-    disableFileElements: function(disabled) {
+    disableFileElements: function (disabled) {
       var childs = this.childs;
       var elems = [childs.newbtn, childs.openbtn, childs.presbtn];
       for (var i = 0; i < elems.length; i++) {
@@ -387,11 +387,11 @@ window.jaxedit = (function($){
       }
     },
 
-    addResizer: function() {
+    addResizer: function () {
       var resizer = this.childs.resizer, main = this.childs.main;
       var that = this;
 
-      resizer.onmousedown = function(event) {
+      resizer.onmousedown = function (event) {
         that.forResize = true;
         var ev = event ? event : window.event;
         if (ev.preventDefault) {
@@ -401,7 +401,7 @@ window.jaxedit = (function($){
         }
       };
 
-      main.onmousemove = function(event) {
+      main.onmousemove = function (event) {
         if (that.forResize) {
           var ev = event ? event : window.event;
           var x = (ev.clientX > 2) ? ev.clientX - 2 : 0;
@@ -412,7 +412,7 @@ window.jaxedit = (function($){
         }
       };
 
-      resizer.onmouseup = function(event) {
+      resizer.onmouseup = function (event) {
         if (that.forResize) {
           var ev = event ? event : window.event;
           that.doResize(ev.clientX);
@@ -421,25 +421,25 @@ window.jaxedit = (function($){
       };
     },
 
-    doScroll: function(isForward) {
+    doScroll: function (isForward) {
       if (!this.autoScroll) return;
       var scrollers = this.scrollers, divheights = scrollers.divheights;
       if (!divheights.length) return;
       var codelength = scrollers.codelength,
-          codescroll = scrollers.codescroll,
-          codechange = scrollers.codechange,
-          showscoll = scrollers.showscroll,
-          showheight = scrollers.showheight;
+        codescroll = scrollers.codescroll,
+        codechange = scrollers.codechange,
+        showscoll = scrollers.showscroll,
+        showheight = scrollers.showheight;
       var editor = this.editor, editinfo = editor.getScrollInfo(),
-          leftpos = editinfo.top,
-          leftscroll = editinfo.height,
-          leftclient = editinfo.clientHeight,
-          leftsize = leftscroll - leftclient;
+        leftpos = editinfo.top,
+        leftscroll = editinfo.height,
+        leftclient = editinfo.clientHeight,
+        leftsize = leftscroll - leftclient;
       var showarea = this.childs.showarea,
-          rightpos = showarea.scrollTop,
-          rightscroll = showarea.scrollHeight,
-          rightclient = showarea.clientHeight,
-          rightsize = rightscroll - rightclient;
+        rightpos = showarea.scrollTop,
+        rightscroll = showarea.scrollHeight,
+        rightclient = showarea.clientHeight,
+        rightsize = rightscroll - rightclient;
 
       var length, newpos, thatpos, thatarea;
 
@@ -521,40 +521,40 @@ window.jaxedit = (function($){
         } else {
           thatarea.scrollTo(0, newpos);
         }
-        setTimeout(function(){that.autoScroll = true;}, 20);
+        setTimeout(function () { that.autoScroll = true; }, 20);
       }
     },
 
-    setScrollers: function(length, change, scroll) {
+    setScrollers: function (length, change, scroll) {
       var scrollers = this.scrollers;
       scrollers.codelength = length;
       scrollers.codechange = change;
       scrollers.codescroll = scroll;
     },
 
-    bindCore: function() {
+    bindCore: function () {
       var that = this;
       var helpbtn = document.getElementById("helpbtn");
-      $(".dlgclose").each(function(){
-        this.onclick = function(){ that.toggleModal(false); };
+      $(".dlgclose").each(function () {
+        this.onclick = function () { that.toggleModal(false); };
       });
-      $(".dbtnclose").each(function(){
-        this.onclick = function(){ that.toggleModal(false); };
+      $(".dbtnclose").each(function () {
+        this.onclick = function () { that.toggleModal(false); };
       });
-      helpbtn.onclick = function() {
+      helpbtn.onclick = function () {
         window.open("manual/help.html", "_blank");
       };
       helpbtn.style.display = "inline-block";
     },
 
-    bindExample: function() {
+    bindExample: function () {
       var newbtn = document.getElementById("newbtn");
       var example = document.getElementById("example");
       var that = this;
 
       function openExample(event) {
         var ev = event ? event : window.event,
-            target = ev.target || ev.srcElement;
+          target = ev.target || ev.srcElement;
         if (target.nodeName.toUpperCase() != "LI") return;
         var name = target.getAttribute("data-name");
         $.ajax({
@@ -565,7 +565,7 @@ window.jaxedit = (function($){
         });
 
         function success(text, status) {
-          if ((status >= 200 && status <300) || status == 304) {
+          if ((status >= 200 && status < 300) || status == 304) {
             that.initEditor(text);
           } else {
             that.changeDialog("dialog-info", "Error", "Error 404: File Not Found!");
@@ -576,11 +576,11 @@ window.jaxedit = (function($){
       newbtn.style.display = "inline-block";
     },
 
-    bindPresent: function() {
+    bindPresent: function () {
       var that = this;
       var presbtn = document.getElementById("presbtn");
-      $.loadScript("showjax/showjax.js", function(){
-        presbtn.onclick = function(event) {
+      $.loadScript("showjax/showjax.js", function () {
+        presbtn.onclick = function (event) {
           var ev = event ? event : window.event;
           ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true;
           window.onresize = null;
@@ -590,7 +590,7 @@ window.jaxedit = (function($){
       });
     },
 
-    bindShare: function() {
+    bindShare: function () {
       var that = this;
       function downloadContent(fid, wcode) {
         console.log("fetch file with fid=" + fid);
@@ -598,7 +598,7 @@ window.jaxedit = (function($){
         path += "?info=" + encodeURIComponent(that.encodeText(encodeURIComponent(info)));
 
         function success(text, status, xhr) {
-          if ((status >= 200 && status <300) || status == 304) {
+          if ((status >= 200 && status < 300) || status == 304) {
             document.getElementById("filename").innerHTML = that.fileName = name;
             console.log("hasEditor", that.hasEditor, "hasParser", that.hasParser);
             var data = decodeURIComponent(that.decodeText(text));
@@ -640,14 +640,14 @@ window.jaxedit = (function($){
 
         boundary = 'jjaaxxeeddiitt';
         content = ['--' + boundary,
-                   'Content-Disposition: form-data; name="file"; filename="' + name + '"',
-                   'Content-Type: text/plain; charset=utf-8',
-                   '',
-                   that.encodeText(encodeURIComponent(data)),
-                   '--' + boundary + '--'].join('\r\n');
+        'Content-Disposition: form-data; name="file"; filename="' + name + '"',
+          'Content-Type: text/plain; charset=utf-8',
+          '',
+        that.encodeText(encodeURIComponent(data)),
+        '--' + boundary + '--'].join('\r\n');
 
         function success(text, status) {
-          if ((status >= 200 && status <300) || status == 304) {
+          if ((status >= 200 && status < 300) || status == 304) {
             document.getElementById("filename").innerHTML = that.fileName = name;
             that.fileid = parseInt(text);
             that.wcode = wcode;
@@ -674,18 +674,18 @@ window.jaxedit = (function($){
 
       function setupShare() {
         var dialog = document.getElementById("dialog"),
-            dlgtitle = $("#dialog-share .dlgtitle")[0],
-            dbtnshare = document.getElementById("dbtnshare"),
-            share_email = document.getElementById("share_email"),
-            share_rcode = document.getElementById("share_rcode"),
-            share_wcode = document.getElementById("share_wcode");
+          dlgtitle = $("#dialog-share .dlgtitle")[0],
+          dbtnshare = document.getElementById("dbtnshare"),
+          share_email = document.getElementById("share_email"),
+          share_rcode = document.getElementById("share_rcode"),
+          share_wcode = document.getElementById("share_wcode");
 
         function checkShare() {
           var name = that.fileName ? that.fileName : "noname.tex";
           var note = document.getElementById("share_note");
           var email = share_email.value,
-              rcode = share_rcode.value,
-              wcode = share_wcode.value;
+            rcode = share_rcode.value,
+            wcode = share_wcode.value;
           if (rcode.length < 4) {
             note.innerHTML = "Error: reading password is too short!";
           } else if (wcode.length < 6) {
@@ -714,7 +714,7 @@ window.jaxedit = (function($){
 
       function enableShare() {
         var sharebtn = document.getElementById("sharebtn");
-        sharebtn.onclick = function() {
+        sharebtn.onclick = function () {
           var fid = that.fileid;
           var name = that.fileName ? that.fileName : "noname.tex";
           if (fid > 0) {
@@ -750,18 +750,18 @@ window.jaxedit = (function($){
       return enableShare;
     },
 
-    bindDrive: function() {
+    bindDrive: function () {
       var that = this;
       var agent = $.agent, browser = agent.browser, version = agent.version;
       var codearea = this.childs.codearea, showarea = this.childs.showarea;
       var openbtn = document.getElementById("openbtn"),
-          opensel = document.getElementById("opensel"),
-          savebtn = document.getElementById("savebtn");
+        opensel = document.getElementById("opensel"),
+        savebtn = document.getElementById("savebtn");
 
       function doOpen(evt) {
         var file = evt.target.files[0],
-            reader = new FileReader();
-        reader.onload = function() {
+          reader = new FileReader();
+        reader.onload = function () {
           //console.log(this.readyState);
           that.initEditor(this.result);
         };
@@ -786,7 +786,7 @@ window.jaxedit = (function($){
       function doSave() {
         var value = that.editor.getValue(), type = "text/latex";
         if (typeof window.Blob == "function") {
-          var blob = new Blob([value], {type: type});
+          var blob = new Blob([value], { type: type });
         } else {
           var BlobBuilder = window.BlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder || window.MSBlobBuilder;
           var bb = new BlobBuilder;
@@ -828,10 +828,10 @@ window.jaxedit = (function($){
 
       function driveOpenSave(mode) {
         var dlgflist = document.getElementById("dialog-file-list"),
-            savename = document.getElementById("savename"),
-            dbtnsave = document.getElementById("dbtnsave");
+          savename = document.getElementById("savename"),
+          dbtnsave = document.getElementById("dbtnsave");
         var footclose = document.getElementById("footclose"),
-            footsave = document.getElementById("footsave");
+          footsave = document.getElementById("footsave");
         var info = "Loading...";
         dlgflist.onclick = dialogClick;
         if (mode == "open") {
@@ -845,8 +845,8 @@ window.jaxedit = (function($){
           dbtnsave.onclick = checkSave;
           that.changeDialog("dialog-info", "Save File", info, true);
         }
-        (function(){
-          if (skydrive.homeid){
+        (function () {
+          if (skydrive.homeid) {
             skydrive.getFilesList(handleResponse);
           } else {
             setTimeout(arguments.callee, 100);
@@ -856,8 +856,8 @@ window.jaxedit = (function($){
 
       function handleResponse(response) {
         var dlginside = document.getElementById("dialog-file-inside"),
-            dlgwalkup = document.getElementById("dialog-file-walkup"),
-            dlgflist = document.getElementById("dialog-file-list");
+          dlgwalkup = document.getElementById("dialog-file-walkup"),
+          dlgflist = document.getElementById("dialog-file-list");
         if (!response.error) {
           var bodytext = "", data, type, name, fid, url, size, time, ftype;
           var finside = skydrive.finside;
@@ -893,7 +893,7 @@ window.jaxedit = (function($){
         that.toggleLoading("Opening file...");
 
         function success(text, status) {
-          if ((status >= 200 && status <300) || status == 304) {
+          if ((status >= 200 && status < 300) || status == 304) {
             document.getElementById("filename").innerHTML = that.fileName = name;
             that.toggleModal(false);
             that.initEditor(text);
@@ -912,9 +912,9 @@ window.jaxedit = (function($){
 
       function saveFileContent(data, name) {
         var fid = skydrive.finside[skydrive.finside.length - 1].fid,
-            hostpath = "https://apis.live.net/v5.0/" + fid + "/files",
-            querystr = "?access_token=" + encodeURIComponent(skydrive.access_token),
-            path = gatepath + "drive.php";
+          hostpath = "https://apis.live.net/v5.0/" + fid + "/files",
+          querystr = "?access_token=" + encodeURIComponent(skydrive.access_token),
+          path = gatepath + "drive.php";
         var type, url, boundary, content, contype;
         that.changeDialog("dialog-info", "", "Saving file...", true);
 
@@ -930,21 +930,21 @@ window.jaxedit = (function($){
           path += "?path=" + encodeURIComponent(that.encodeText(url));
           boundary = 'jjaaxxeeddiitt';
           content = ['--' + boundary,
-                     'Content-Disposition: form-data; name="file"; filename="' + name + '"',
-                     'Content-Type: text/plain; charset=utf-8',
-                     '',
-                     data,
-                     '--' + boundary + '--'].join('\r\n');
+          'Content-Disposition: form-data; name="file"; filename="' + name + '"',
+            'Content-Type: text/plain; charset=utf-8',
+            '',
+            data,
+          '--' + boundary + '--'].join('\r\n');
           contype = "multipart/form-data; boundary=" + boundary;
         }
 
         function success(text, status) {
-            if ((status >= 200 && status <300) || status == 304) {
-              document.getElementById("filename").innerHTML = that.fileName = name;
-              that.toggleModal(false);
-            } else {
-              that.toggleInfo(status + " error in saving file!");
-            }
+          if ((status >= 200 && status < 300) || status == 304) {
+            document.getElementById("filename").innerHTML = that.fileName = name;
+            that.toggleModal(false);
+          } else {
+            that.toggleInfo(status + " error in saving file!");
+          }
         }
 
         $.ajax({
@@ -969,7 +969,7 @@ window.jaxedit = (function($){
 
       function dialogClick(event) {
         var ev = event ? event : window.event,
-            target = ev.target || ev.srcElement;
+          target = ev.target || ev.srcElement;
         if (target.nodeName.toUpperCase() == "A") {
           var fid = target.getAttribute("data-fid");
           console.log("clicked: fid = " + fid);
@@ -981,7 +981,7 @@ window.jaxedit = (function($){
               break;
             case "folder":
               that.toggleLoading("Loading...");
-              skydrive.finside.push({fid: fid, name: target.innerHTML});
+              skydrive.finside.push({ fid: fid, name: target.innerHTML });
               skydrive.getFilesList(handleResponse);
               break;
           }
@@ -996,7 +996,7 @@ window.jaxedit = (function($){
 
       function changeFileDisplay(display) {
         var openbtn = document.getElementById("openbtn"),
-           savebtn = document.getElementById("savebtn");
+          savebtn = document.getElementById("savebtn");
         if (display) {
           openbtn.style.display = "inline-block";
           savebtn.style.display = "inline-block";
@@ -1027,8 +1027,8 @@ window.jaxedit = (function($){
       }
 
       if (that.trustHost) {
-        $.loadScript(location.protocol + "//js.live.net/v5.0/wl.js", function(){ // wl.debug.js
-          $.loadScript("editor/webdrive/skydrive.js", function(){
+        $.loadScript(location.protocol + "//js.live.net/v5.0/wl.js", function () { // wl.debug.js
+          $.loadScript("editor/webdrive/skydrive.js", function () {
             if (that.localDrive) {
               document.getElementById("dialog-option-drive").style.display = "block";
               document.getElementById("optbtn").style.display = "inline-block"; // remove later
@@ -1054,14 +1054,14 @@ window.jaxedit = (function($){
       */
     },
 
-    bindOption: function() {
+    bindOption: function () {
       var that = this;
       var optbtn = document.getElementById("optbtn");
       var dbtndone = document.getElementById("dbtndone");
-      optbtn.onclick = function() {
+      optbtn.onclick = function () {
         that.changeDialog("dialog-option", "Options");
       };
-      dbtndone.onclick = function() {
+      dbtndone.onclick = function () {
         that.toggleModal(false);
         var radios = document.getElementsByName('drive');
         for (var i = 0, length = radios.length; i < length; i++) {
@@ -1077,45 +1077,45 @@ window.jaxedit = (function($){
       // optbtn.style.display = "inline-block";
     },
 
-    bindView: function() {
+    bindView: function () {
       var that = this;
       var quad = document.getElementById("toggle-quadview"),
-          half = document.getElementById("toggle-halfview"),
-          code = document.getElementById("toggle-codeview"),
-          show = document.getElementById("toggle-showview");
+        half = document.getElementById("toggle-halfview"),
+        code = document.getElementById("toggle-codeview"),
+        show = document.getElementById("toggle-showview");
       function disable() {
         that.childs.presbtn.style.display = "none";
       }
-      quad.onclick = function() {
+      quad.onclick = function () {
         disable();
         that.view = "quad";
         that.doResize();
         typejax.updater.initMode("tiny");
       };
-      half.onclick = function() {
+      half.onclick = function () {
         disable();
         that.view = "half";
         that.doResize();
         typejax.updater.initMode("full");
       };
-      code.onclick = function() {
+      code.onclick = function () {
         that.view = "code";
         that.doResize();
       };
-      show.onclick = function() {
+      show.onclick = function () {
         that.view = "show";
         that.doResize();
       };
     },
 
-    changeDriveIcons: function(prefix) {
-        $("#openbtn i")[0].className = "icon-" + prefix + "-open";
-        $("#savebtn i")[0].className = "icon-" + prefix + "-save";
+    changeDriveIcons: function (prefix) {
+      $("#openbtn i")[0].className = "icon-" + prefix + "-open";
+      $("#savebtn i")[0].className = "icon-" + prefix + "-save";
     },
 
-    toggleModal: function(view) {
+    toggleModal: function (view) {
       var ol = document.getElementById("overlay"),
-          ct = document.getElementById("container");
+        ct = document.getElementById("container");
       if (view) {
         ol.style.display = "block";
         ct.style.display = "block";
@@ -1125,15 +1125,15 @@ window.jaxedit = (function($){
       }
     },
 
-    toggleLoading: function(info) {
+    toggleLoading: function (info) {
       this.changeDialog("dialog-info", "Loading", info, true);
     },
 
-    toggleInfo: function(info) {
+    toggleInfo: function (info) {
       this.changeDialog("dialog-info", "Info", info);
     },
 
-    changeDialog: function(idname, title, info, loading) {
+    changeDialog: function (idname, title, info, loading) {
       var childs, element, i;
       if (idname) {
         childs = document.getElementById("dialog").childNodes;
@@ -1158,10 +1158,10 @@ window.jaxedit = (function($){
       this.toggleModal(true);
     },
 
-    encodeText: function(text) {
+    encodeText: function (text) {
       if (!text) return text;
       var length = text.length, safePrime = 1964903159, result = [],
-          index = navigator.userAgent.length % length, step = safePrime % length;
+        index = navigator.userAgent.length % length, step = safePrime % length;
       console.log("encodeText: length = " + length + " start = " + index + " step = " + step);
       for (var i = 0; i < length; i++) {
         result.push(text.charAt(index));
@@ -1170,10 +1170,10 @@ window.jaxedit = (function($){
       return result.join("");
     },
 
-    decodeText: function(text) {
+    decodeText: function (text) {
       if (!text) return text;
       var length = text.length, safePrime = 1964903159, result = [],
-          index = navigator.userAgent.length % length, step = safePrime % length;
+        index = navigator.userAgent.length % length, step = safePrime % length;
       console.log("decodeText: length = " + length + " start = " + index + " step = " + step);
       for (var i = 0; i < length; i++) {
         result[index] = text.charAt(i);
@@ -1182,10 +1182,10 @@ window.jaxedit = (function($){
       return result.join("");
     },
 
-    randomString: function(size) {
+    randomString: function (size) {
       var text = "";
       var possible = "abcdefghijklmnopqrstuvwxyz";
-      for (var i=0; i < size; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+      for (var i = 0; i < size; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     }
   }
@@ -1195,17 +1195,17 @@ function readFile(filePath) {
   let rawFile = new XMLHttpRequest();
   rawFile.open("GET", filePath, false);
   rawFile.onreadystatechange = function () {
-      if (rawFile.readyState === 4) {
-          if (rawFile.status === 200 || rawFile.status == 0) {
-            jaxedit.doLoad(rawFile.responseText);
-          }
+    if (rawFile.readyState === 4) {
+      if (rawFile.status === 200 || rawFile.status == 0) {
+        jaxedit.doLoad(rawFile.responseText);
       }
+    }
   }
   rawFile.send(null);
 }
-window.onload = function() {
-  let filePath = common.getParameterByName('file');
+window.onload = function () {
+  let filePath = common.getCurrentFilePath();
   document.getElementById('filename').innerText = filePath;
   readFile(filePath);
 };
-window.onresize = function() {jaxedit.doResize()};
+window.onresize = function () { jaxedit.doResize() };

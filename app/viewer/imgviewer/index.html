@@ -80,7 +80,7 @@
                 }
                 img.src = filePath;
             }
-            let filePath = common.getParameterByName('file');
+            let filePath = common.getCurrentFilePath();
             let ext = common.getFileExt(filePath);
             if (ext == "tif" || ext == "tiff") {
                 let xhr = new XMLHttpRequest();

@@ -5152,7 +5152,7 @@
         kind: OptionKind.VIEWER
       },
       defaultUrl: {
-        value: common.getParameterByName('file'),
+        value: common.getCurrentFilePath(),
         kind: OptionKind.VIEWER
       },
       defaultZoomValue: {

@@ -14,7 +14,7 @@
             // try also https://github.com/readium/readium-js-viewer
             document.onreadystatechange = function () {
                 if (document.readyState == "complete") {
-                    window.reader = ePubReader(common.getParameterByName("file"), { restore: true });
+                    window.reader = ePubReader(common.getCurrentFilePath(), { restore: true });
                 }
             };
 

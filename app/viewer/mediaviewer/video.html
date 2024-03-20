@@ -74,7 +74,7 @@
                 vrEnabled = true;
             }
             let vrEnabled = false;
-            let filePath = common.getParameterByName('file');
+            let filePath = common.getCurrentFilePath();
             let ext = common.getFileExt(filePath);
             let mediaEle = document.getElementById('my-player');
             //setup player

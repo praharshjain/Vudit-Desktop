@@ -5,11 +5,11 @@
             height: 100%;
         }
     </style>
-    <embed id="swf"/>
+    <embed id="swf" />
     <script src="ruffle/ruffle.js"></script>
     <script>
         const ele = document.getElementById('swf');
-        ele.src = common.getParameterByName('file');
+        ele.src = common.getCurrentFilePath();
     </script>
 
 </html>

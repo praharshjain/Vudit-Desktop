@@ -29,7 +29,7 @@
                 //TODO: check for yaml
                 return false;
             }
-            const filePath = common.getParameterByName('file');
+            const filePath = common.getCurrentFilePath();
             document.title = 'Vudit - ' + filePath;
             fetch(filePath)
                 .then(function (response) {

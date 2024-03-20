@@ -37,7 +37,7 @@
         <script type='text/javascript' src="json-schema-viewer.min.js"></script>
         <script type='text/javascript'>
             (function ($) {
-                const filePath = common.getParameterByName('file');
+                const filePath = common.getCurrentFilePath();
                 JSV.init({
                     schema: filePath,
                     plain: true, //don't use JQM

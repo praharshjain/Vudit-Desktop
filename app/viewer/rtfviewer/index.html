@@ -12,7 +12,7 @@
             WMFJS.loggingEnabled(false);
             EMFJS.loggingEnabled(false);
             const viewer = document.getElementById('viewer');
-            const filePath = common.getParameterByName('file');
+            const filePath = common.getCurrentFilePath();
             const ext = common.getFileExt(filePath);
             let request = new XMLHttpRequest();
             request.open('GET', filePath, true);

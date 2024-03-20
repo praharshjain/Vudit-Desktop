@@ -12,7 +12,7 @@
         <script src="script.js"></script>
         <script>
             const config = common.getConfig();
-            let zipEntries = common.ipcRenderer.sendSync('getZipEntries', common.getParameterByName('file'));
+            let zipEntries = common.ipcRenderer.sendSync('getZipEntries', common.getCurrentFilePath());
             $(document).ready(function () {
                 $('#files').DataTable({
                     data: zipEntries,

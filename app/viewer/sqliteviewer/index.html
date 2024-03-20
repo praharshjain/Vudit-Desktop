@@ -109,7 +109,7 @@
         <script src="js/mindmup-editabletable.js"></script>
         <script src="js/main.js"></script>
         <script>
-            var filePath = common.getParameterByName('file');
+            var filePath = common.getCurrentFilePath();
             fetch(filePath)
                 .then(async response => {
                     const blob = await response.blob();
