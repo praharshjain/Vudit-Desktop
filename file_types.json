@@ -117,6 +117,24 @@
         "rank": "Images"
     },
     {
+        "ext": "avif",
+        "name": "AVIF",
+        "icon": "app/icons/file_image.svg",
+        "description": "AV1 Image File Format",
+        "mimeType": "image/avif",
+        "role": "Viewer",
+        "rank": "Images"
+    },
+    {
+        "ext": "avifs",
+        "name": "AVIF",
+        "icon": "app/icons/file_image.svg",
+        "description": "AV1 Image File Format",
+        "mimeType": "image/avif",
+        "role": "Viewer",
+        "rank": "Images"
+    },
+    {
         "ext": "mp3",
         "name": "MP3",
         "icon": "app/icons/file_music.svg",
@@ -595,6 +613,15 @@
     },
     {
         "ext": "sqlite",
+        "name": "SQLite",
+        "icon": "app/icons/file_default.svg",
+        "description": "SQLite database",
+        "mimeType": "application/vnd.sqlite3",
+        "role": "Viewer",
+        "rank": "Documents"
+    },
+    {
+        "ext": "sqlite3",
         "name": "SQLite",
         "icon": "app/icons/file_default.svg",
         "description": "SQLite database",
