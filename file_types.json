@@ -637,5 +637,23 @@
         "mimeType": "text/pgn",
         "role": "Viewer",
         "rank": "Documents"
+    },
+    {
+        "ext": "puz",
+        "name": "PUZ",
+        "icon": "app/icons/file_default.svg",
+        "description": "Crossword Puzzle",
+        "mimeType": "text/puz",
+        "role": "Viewer",
+        "rank": "Documents"
+    },
+    {
+        "ext": "jpz",
+        "name": "JPZ",
+        "icon": "app/icons/file_default.svg",
+        "description": "Puzzle Solver Puzzle File",
+        "mimeType": "text/jpz",
+        "role": "Viewer",
+        "rank": "Documents"
     }
 ]

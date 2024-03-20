@@ -117,6 +117,8 @@ fileTypeMap['ipynb'].url = '/ipynbviewer/index.html?file=';
 fileTypeMap['sqlite'].url = '/sqliteviewer/index.html?file=';
 fileTypeMap['sqlite3'].url = '/sqliteviewer/index.html?file=';
 fileTypeMap['diff'].url = '/diffviewer/index.html?file=';
+fileTypeMap['puz'].url = '/puzzleviewer/index.html?file=';
+fileTypeMap['jpz'].url = '/puzzleviewer/index.html?file=';
 
 
 //directory paths
