@@ -179,7 +179,7 @@ function closeFile(e) {
     let ele = e.target;
     common.ipcRenderer.sendSync('closeView', ele.parentNode.id);
     ele.parentNode.remove(ele);
-    showFiles(favoritesPane.children[2], dirPaths.Home.path);
+    showFiles(null, currentDir);
 }
 
 function filterFiles(e) {
