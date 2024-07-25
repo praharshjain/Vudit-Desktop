@@ -1,22 +1,34 @@
-require('v8-compile-cache');
-const config = require('./config');
-const fn = require('./functions');
-const fs = require('fs');
-const path = require('path');
-const admZip = require('adm-zip');
-const { https } = require('follow-redirects');
-const MimeTypeParser = require("whatwg-mimetype");;
-const mimeLookup = require('mime-lookup');
-const mime = new mimeLookup(require('mime-db'));
-const prompt = require('electron-prompt');
-const { menubar } = require('menubar');
-const { ElectronChromeExtensions } = require('electron-chrome-extensions');
-const { app, shell, Menu, dialog, ipcMain, crashReporter, BrowserWindow, BrowserView, session, nativeImage } = require('electron');
+require("v8-compile-cache");
+const config = require("./config");
+const fn = require("./functions");
+const fs = require("fs");
+const path = require("path");
+const admZip = require("adm-zip");
+const { https } = require("follow-redirects");
+const MimeTypeParser = require("whatwg-mimetype");
+const mimeLookup = require("mime-lookup");
+const mime = new mimeLookup(require("mime-db"));
+const prompt = require("electron-prompt");
+const { menubar } = require("menubar");
+const { ElectronChromeExtensions } = require("electron-chrome-extensions");
+const {
+  app,
+  shell,
+  Menu,
+  dialog,
+  ipcMain,
+  crashReporter,
+  BrowserWindow,
+  BrowserView,
+  session,
+  nativeImage,
+} = require("electron");
+const { webContents } = require("electron/main");
 const isDev = !app.isPackaged;
-const options = { extraHeaders: 'pragma: no-cache\n' };
+const options = { extraHeaders: "pragma: no-cache\n" };
 const appIcon = nativeImage.createFromPath(config.iconPath);
-const fnPath = path.join(__dirname, 'functions.js');
-const whiteColor = '#ffffff;'
+const fnPath = path.join(__dirname, "functions.js");
+const whiteColor = "#ffffff;";
 const baseWebPreferences = {
   devTools: isDev,
   plugins: true,
@@ -27,11 +39,11 @@ const baseWebPreferences = {
   nodeIntegrationInSubFrames: true,
   contextIsolation: false,
   preload: fnPath,
-  defaultEncoding: 'UTF-8'
+  defaultEncoding: "UTF-8",
 };
-const startURL = 'file://' + __dirname + '/photon/index.html';
-const dropURL = 'file://' + __dirname + '/photon/drop.html';
-const splashURL = 'file://' + __dirname + '/splash.html';
+const startURL = "file://" + __dirname + "/photon/index.html";
+const dropURL = "file://" + __dirname + "/photon/drop.html";
+const splashURL = "file://" + __dirname + "/splash.html";
 const browserViewMarginTop = 55;
 const browserViewMarginLeft = 220;
 let mainWindow, splashWindow, mb;
@@ -43,14 +55,14 @@ let openViews = {};
 const menuBarTemplate = [
   {
     label: config.appName,
-    role: 'appMenu'
+    role: "appMenu",
   },
   {
-    label: 'File',
+    label: "File",
     submenu: [
       {
-        label: 'Open File',
-        accelerator: 'CmdOrCtrl+O',
+        label: "Open File",
+        accelerator: "CmdOrCtrl+O",
         click: function (item, focusedWindow) {
           if (focusedWindow) {
             handleOpenFile();
@@ -58,7 +70,7 @@ const menuBarTemplate = [
         },
       },
       {
-        label: 'Open URL',
+        label: "Open URL",
         click: function (item, focusedWindow) {
           if (focusedWindow) {
             handleOpenURL();
@@ -66,119 +78,143 @@ const menuBarTemplate = [
         },
       },
       {
-        type: 'separator',
+        type: "separator",
       },
-      { role: 'quit' },
+      { role: "quit" },
     ],
   },
   {
-    label: 'Edit',
+    label: "Edit",
     submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'copy' },
-      { role: 'paste' },
-      { role: 'selectall' },
-    ]
+      { role: "undo" },
+      { role: "redo" },
+      { type: "separator" },
+      { role: "copy" },
+      { role: "paste" },
+      { role: "selectall" },
+    ],
   },
   {
-    label: 'View',
+    label: "View",
     submenu: [
-      { role: 'reload' },
-      { role: 'forceReload' },
-      { type: 'separator' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { role: 'resetZoom' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' },
-    ]
+      { role: "reload" },
+      { role: "forceReload" },
+      { type: "separator" },
+      { role: "zoomIn" },
+      { role: "zoomOut" },
+      { role: "resetZoom" },
+      { type: "separator" },
+      { role: "togglefullscreen" },
+    ],
   },
   {
-    label: 'Window',
-    role: 'window',
-    submenu: [{ label: 'Minimize', accelerator: 'CmdOrCtrl+M', role: 'minimize' }]
+    label: "Window",
+    role: "window",
+    submenu: [
+      { label: "Minimize", accelerator: "CmdOrCtrl+M", role: "minimize" },
+    ],
   },
   {
-    label: 'Help',
-    role: 'help',
-    submenu: [{
-      label: 'About',
-      click: function () {
-        dialog.showMessageBox(mainWindow, {
-          type: 'info',
-          buttons: ['OK'],
-          title: config.appName,
-          message: 'Version ' + config.appVersion,
-          detail: 'Created By - ' + config.author,
-          icon: appIcon
-        });
-      }
-    },
-    { label: 'Learn More', click: function () { shell.openExternal('https://github.com/praharshjain/Electron-PDF-Viewer'); } },
-    ]
+    label: "Help",
+    role: "help",
+    submenu: [
+      {
+        label: "About",
+        click: function () {
+          dialog.showMessageBox(mainWindow, {
+            type: "info",
+            buttons: ["OK"],
+            title: config.appName,
+            message: "Version " + config.appVersion,
+            detail: "Created By - " + config.author,
+            icon: appIcon,
+          });
+        },
+      },
+      {
+        label: "Learn More",
+        click: function () {
+          shell.openExternal(
+            "https://github.com/praharshjain/Electron-PDF-Viewer",
+          );
+        },
+      },
+    ],
   },
 ];
 const contextMenuTemplate = [
   {
-    label: 'Minimize',
-    type: 'radio',
-    role: 'minimize',
+    label: "Minimize",
+    type: "radio",
+    role: "minimize",
   },
   {
-    type: 'separator',
+    type: "separator",
   },
   {
-    label: 'Exit',
-    type: 'radio',
-    role: 'quit',
+    label: "Exit",
+    type: "radio",
+    role: "quit",
   },
 ];
 const menu = Menu.buildFromTemplate(menuBarTemplate);
 // enable SharedArrayBuffer for ffmpeg-wasm
-app.commandLine.appendSwitch('enable-features', 'SharedArrayBuffer');
+app.commandLine.appendSwitch("enable-features", "SharedArrayBuffer");
 app.setName(config.appName);
-app.setAboutPanelOptions({ applicationName: config.appName, applicationVersion: config.appVersion, copyright: config.copyrightInfo, version: config.appVersion, credits: config.author, authors: [config.author], website: config.website, iconPath: config.iconPath });
-crashReporter.start({ productName: config.appName, companyName: config.author, submitURL: config.website, autoSubmit: false });
+app.setAboutPanelOptions({
+  applicationName: config.appName,
+  applicationVersion: config.appVersion,
+  copyright: config.copyrightInfo,
+  version: config.appVersion,
+  credits: config.author,
+  authors: [config.author],
+  website: config.website,
+  iconPath: config.iconPath,
+});
+crashReporter.start({
+  productName: config.appName,
+  companyName: config.author,
+  submitURL: config.website,
+  autoSubmit: false,
+});
 forceSingleInstance();
 
-app.on('ready', function () {
+app.on("ready", function () {
   showSplashWindow();
   Menu.setApplicationMenu(menu);
   // ipc stuff
-  ipcMain.handle('handleOpenFile', (e) => {
+  ipcMain.handle("handleOpenFile", (e) => {
     handleOpenFile();
   });
-  ipcMain.handle('handleOpenURL', (e) => {
+  ipcMain.handle("handleOpenURL", (e) => {
     handleOpenURL();
   });
-  ipcMain.handle('listFiles', (e, dir) => {
+  ipcMain.handle("listFiles", (e, dir) => {
     return listFiles(dir);
   });
-  ipcMain.on('openFile', (e, path, type) => {
+  ipcMain.on("openFile", (e, path, type) => {
     e.returnValue = openFile(path, type);
   });
-  ipcMain.on('quickLookPreview', (e, name, path) => {
+  ipcMain.on("quickLookPreview", (e, name, path) => {
     e.returnValue = quickLookPreview(name, path);
   });
-  ipcMain.on('restoreView', (e, path) => {
+  ipcMain.on("restoreView", (e, path) => {
     e.returnValue = canRestoreView(path);
   });
-  ipcMain.on('closeView', (e, path) => {
+  ipcMain.on("closeView", (e, path) => {
     e.returnValue = closeView(path);
-  })
-  ipcMain.on('hideOpenFiles', (e, path) => {
+  });
+  ipcMain.on("hideOpenFiles", (e, path) => {
     e.returnValue = hideOpenFiles();
-  })
-  ipcMain.on('getConfig', (e) => {
+  });
+  ipcMain.on("getConfig", (e) => {
     e.returnValue = JSON.stringify(config);
   });
-  ipcMain.on('getZipEntries', (e, path) => {
+  ipcMain.on("getZipEntries", (e, path) => {
     e.returnValue = getZipEntries(path);
   });
-  ipcMain.on('getPreviewURL', (e, path) => {
-    e.returnValue = getPreviewURL(path);
+  ipcMain.on("getPreviewURL", (e, path) => {
+    e.returnValue = "../" + getViewerURLFromPath(path, config.fileTypeMap);
   });
 
   //setup tray icon
@@ -192,7 +228,7 @@ app.on('ready', function () {
     nodeIntegrationInSubFrames: true,
     contextIsolation: false,
     preload: fnPath,
-    defaultEncoding: 'UTF-8'
+    defaultEncoding: "UTF-8",
   };
   mb = menubar({
     index: dropURL,
@@ -212,11 +248,11 @@ app.on('ready', function () {
       webPreferences: mbWebPreferences,
     },
   });
-  mb.on('ready', () => {
+  mb.on("ready", () => {
     let tray = mb.tray;
     contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
     tray.setToolTip(config.appName);
-    tray.on('right-click', (event, bounds) => {
+    tray.on("right-click", (event, bounds) => {
       if (mb.window) {
         mb.window.close();
       }
@@ -230,7 +266,7 @@ app.on('ready', function () {
     if (isDev) {
       mb.window.openDevTools();
     } else {
-      mb.window.webContents.on('devtools-opened', function (e) {
+      mb.window.webContents.on("devtools-opened", function (e) {
         e.preventDefault();
         this.closeDevTools();
       });
@@ -241,13 +277,13 @@ app.on('ready', function () {
 });
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on("window-all-closed", function () {
   if (!fn.isOSX()) {
     app.quit();
   }
 });
 
-app.on('activate', function () {
+app.on("activate", function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
@@ -258,7 +294,7 @@ app.on('activate', function () {
 // helper functions
 function resetWindow(window) {
   if (window == null) {
-    return
+    return;
   }
   window.webContents.closeDevTools();
   window.webContents.clearHistory();
@@ -274,7 +310,7 @@ function forceSingleInstance() {
   if (!app.requestSingleInstanceLock()) {
     app.quit();
   } else {
-    app.on('second-instance', (event, commandLine, workingDirectory) => {
+    app.on("second-instance", (event, commandLine, workingDirectory) => {
       // Someone tried to run a second instance, we should focus our window.
       if (mainWindow) {
         if (mainWindow.isMinimized()) {
@@ -329,26 +365,26 @@ function createMainWindow() {
   mainWindow.setIcon(appIcon);
   mainWindow.setOverlayIcon(appIcon, config.appName);
   resetWindow(mainWindow);
-  mainWindow.on('close', function (e) {
+  mainWindow.on("close", function (e) {
     resetWindow(mainWindow);
     mainWindow.destroy();
   });
-  mainWindow.on('closed', function () {
+  mainWindow.on("closed", function () {
     mainWindow = null;
     app.quit();
   });
-  mainWindow.on('moved', resizeBrowserView);
-  mainWindow.on('leave-full-screen', resizeBrowserView);
-  mainWindow.on('leave-html-full-screen', resizeBrowserView);
-  mainWindow.on('moved', resizeBrowserView);
-  mainWindow.on('enter-full-screen', handleFullScreen);
-  mainWindow.on('enter-html-full-screen', handleFullScreen);
-  mainWindow.webContents.on('new-window', function (e, url) {
+  mainWindow.on("moved", resizeBrowserView);
+  mainWindow.on("leave-full-screen", resizeBrowserView);
+  mainWindow.on("leave-html-full-screen", resizeBrowserView);
+  mainWindow.on("moved", resizeBrowserView);
+  mainWindow.on("enter-full-screen", handleFullScreen);
+  mainWindow.on("enter-html-full-screen", handleFullScreen);
+  mainWindow.webContents.on("new-window", function (e, url) {
     e.preventDefault();
     shell.openExternal(url);
   });
-  mainWindow.webContents.on('will-navigate', function (e, url) {
-    if (url.substr(0, 4) != 'file') {
+  mainWindow.webContents.on("will-navigate", function (e, url) {
+    if (url.substr(0, 4) != "file") {
       e.preventDefault();
       shell.openExternal(url);
     }
@@ -358,18 +394,22 @@ function createMainWindow() {
     //TODO: try if we can get chrome extensions to work
     const extensions = new ElectronChromeExtensions();
     extensions.addTab(mainWindow.webContents, mainWindow);
-    session.defaultSession.loadExtension('path/to/unpacked/extension').then(({ id }) => {
-      //
-    });
+    session.defaultSession
+      .loadExtension("path/to/unpacked/extension")
+      .then(({ id }) => {
+        //
+      });
   } else {
-    mainWindow.webContents.on('devtools-opened', function (e) {
+    mainWindow.webContents.on("devtools-opened", function (e) {
       e.preventDefault();
       this.closeDevTools();
     });
   }
   mainWindow.loadURL(startURL, options);
-  mainWindow.on('show', () => { mainWindow.focus(); });
-  mainWindow.once('ready-to-show', () => {
+  mainWindow.on("show", () => {
+    mainWindow.focus();
+  });
+  mainWindow.once("ready-to-show", () => {
     hideSplashWindow();
     mainWindow.maximize();
     mainWindow.show();
@@ -378,48 +418,50 @@ function createMainWindow() {
 
 function handleOpenURL() {
   prompt({
-    title: 'Open URL',
-    label: 'URL:',
-    value: '',
-    inputAttrs: { type: 'url' },
-    type: 'input',
+    title: "Open URL",
+    label: "URL:",
+    value: "",
+    inputAttrs: { type: "url" },
+    type: "input",
     alwaysOnTop: true,
-  }).then((url) => {
-    if (url != null) {
-      openFile(url);
-    }
-  }).catch(console.error);
+  })
+    .then((url) => {
+      if (url != null) {
+        openFile(url);
+      }
+    })
+    .catch(console.error);
 }
 
 function handleOpenFile() {
   let path = dialog.showOpenDialogSync({
     filters: [
       {
-        name: 'All Files',
-        extensions: ['*'],
+        name: "All Files",
+        extensions: ["*"],
       },
       {
-        name: 'Images',
+        name: "Images",
         extensions: config.imageExt,
       },
       {
-        name: 'Audio',
+        name: "Audio",
         extensions: config.audioExt,
       },
       {
-        name: 'Video',
+        name: "Video",
         extensions: config.videoExt,
       },
       {
-        name: 'Documents',
+        name: "Documents",
         extensions: config.docExt,
       },
       {
-        name: 'Archives',
+        name: "Archives",
         extensions: config.arcExt,
       },
     ],
-    properties: ['openFile', 'showHiddenFiles'],
+    properties: ["openFile", "showHiddenFiles"],
   });
   if (path) {
     if (path.constructor === Array) {
@@ -429,62 +471,53 @@ function handleOpenFile() {
   }
 }
 
-function getViewerURLByType(path, ext, mimeType) {
-  let baseURL = 'file://' + __dirname + '/viewer';
-  path = encodeURIComponent(path);
-  if (ext in config.fileTypeMap) {
-    return baseURL + config.fileTypeMap[ext].url + path;
-  }
-  if (mimeType in config.fileTypeMap) {
-    return baseURL + config.fileTypeMap[mimeType].url + path;
-  }
-  if (mimeType.includes('text')) {
-    return baseURL + config.fileTypeMap['txt'].url + path;
-  }
-  if (mimeType.includes('video')) {
-    return baseURL + config.fileTypeMap['mp4'].url + path;
-  }
-  if (mimeType.includes('audio')) {
-    return baseURL + config.fileTypeMap['mp3'].url + path;
-  }
-  if (mimeType.includes('image')) {
-    return baseURL + config.fileTypeMap['png'].url + path;
-  }
-  console.log('\n\n unsupported file -> path: ' + path + ' ext: ' + ext + ' mimeType: ' + mimeType);
-  return '';
-}
-
-function openFile(path, mimeType = '') {
-  if (path == '') {
-    return { state: fn.fileNotOpened, url: '' };
-  }
+function getViewerURLFromPath(path, fileTypeMap, mimeType = "") {
   let ext = fn.getFileExt(path);
-  if (mimeType == '') {
+  if (mimeType == "") {
     mimeType = mime.lookup(path);
   } else {
     //override ext based on passed mimeType (for open as)
     ext = mimeType;
   }
-  let viewerURL = getViewerURLByType(path, ext, mimeType);
-  if (viewerURL != '') {
-    return loadURLInWindow(mainWindow, viewerURL, path, true);
+  let viewerURL = fn.getViewerURLByType(path, ext, mimeType, fileTypeMap);
+  if (viewerURL != "") {
+    return viewerURL;
   }
   //try to read content type from headers
-  if (path.startsWith('http')) {
-    https.request(path, { method: 'HEAD' }, (res) => {
-      let contentType = new MimeTypeParser(res.headers['content-type']);
-      mimeType = contentType.type + '/' + contentType.subtype;
-      viewerURL = getViewerURLByType(path, mime.extension(mimeType), mimeType);
-      if (viewerURL != '') {
-        return loadURLInWindow(mainWindow, viewerURL, path, true);
-      }
-      return showUnsupportedDialog(path);
-    }).on('error', (err) => {
-      console.error(err);
-    }).end();
-  } else {
-    return showUnsupportedDialog(path);
+  if (path.startsWith("http")) {
+    https
+      .request(path, { method: "HEAD" }, (res) => {
+        let contentType = new MimeTypeParser(res.headers["content-type"]);
+        mimeType = contentType.type + "/" + contentType.subtype;
+        viewerURL = fn.getViewerURLByType(
+          path,
+          mime.extension(mimeType),
+          mimeType,
+          fileTypeMap,
+        );
+        if (viewerURL != "") {
+          return viewerURL;
+        }
+      })
+      .on("error", (err) => {
+        console.error(err);
+      })
+      .end();
   }
+  return "";
+}
+
+function openFile(path, mimeType = "") {
+  if (path == "") {
+    return { state: fn.fileNotOpened, url: "" };
+  }
+  let viewerURL = getViewerURLFromPath(path, config.fileTypeMap, mimeType);
+  if (viewerURL != "") {
+    viewerURL = "file://" + __dirname + "/" + viewerURL;
+    console.log("\n file: " + path + "\n viewerURL: " + viewerURL);
+    return loadURLInWindow(mainWindow, viewerURL, path, true);
+  }
+  return showUnsupportedDialog(path);
 }
 
 function quickLookPreview(name, path) {
@@ -495,7 +528,7 @@ function quickLookPreview(name, path) {
 function loadURLInWindow(win, url, path, loadInBrowserView = false) {
   if (canRestoreView(url)) {
     let obj = { state: fn.fileRestored, url: url };
-    win.webContents.send('fileOpened', obj, path);
+    win.webContents.send("fileOpened", obj, path);
     return obj;
   }
   if (loadInBrowserView) {
@@ -509,7 +542,7 @@ function loadURLInWindow(win, url, path, loadInBrowserView = false) {
     win.loadURL(url, options);
   }
   let obj = { state: fn.fileOpened, url: url };
-  win.webContents.send('fileOpened', obj, path);
+  win.webContents.send("fileOpened", obj, path);
   return obj;
 }
 
@@ -524,29 +557,20 @@ function setBoundsForView(win, view) {
   view.setAutoResize({ width: true, height: true });
 }
 
-function getPreviewURL(path) {
-  if (path == '') {
-    return '';
-  }
-  //preference to extension/mime first
-  let ext = fn.getFileExt(path);
-  let mimeType = mime.lookup(path);
-  return getViewerURLByType(path, ext, mimeType);
-}
-
 function showUnsupportedDialog(path) {
   let choice = dialog.showMessageBoxSync(mainWindow, {
-    type: 'question',
-    buttons: ['Yes', 'No'],
+    type: "question",
+    buttons: ["Yes", "No"],
     defaultId: 0,
     cancelId: 1,
-    title: 'Unsupported/unknown file type',
-    message: 'The selected file type is not supported. Do you want to open it as text?',
+    title: "Unsupported/unknown file type",
+    message:
+      "The selected file type is not supported. Do you want to open it as text?",
   });
   if (choice == 0) {
-    openFile(path, 'text/plain');
+    openFile(path, "text/plain");
   }
-  return { state: fn.fileNotOpened, url: '' };
+  return { state: fn.fileNotOpened, url: "" };
 }
 
 function getZipEntries(path) {
@@ -564,19 +588,32 @@ function createZipEntry(obj) {
   let modified = obj.header.time.toString();
   let crc = obj.header.crc;
   let method = obj.header.method;
-  method = method == 8 ? 'Deflate' : 'Store';
-  let comp_size = fn.getReadableSize({ isFile: !obj.isDirectory, size: obj.header.compressedSize });
-  let orig_size = fn.getReadableSize({ isFile: !obj.isDirectory, size: obj.header.size });
-  let icon = '';
+  method = method == 8 ? "Deflate" : "Store";
+  let comp_size = fn.getReadableSize({
+    isFile: !obj.isDirectory,
+    size: obj.header.compressedSize,
+  });
+  let orig_size = fn.getReadableSize({
+    isFile: !obj.isDirectory,
+    size: obj.header.size,
+  });
+  let icon = "";
   if (obj.isDirectory) {
     name = obj.entryName;
-    crc = ' - ';
+    crc = " - ";
     icon = fn.getIcon({ isDir: true, path: name });
-  }
-  else {
+  } else {
     icon = fn.getIcon({ isFile: true, path: name });
   }
-  return [icon + "<span style='vertical-align:super;'>" + name + "</span>", version, modified, comp_size, orig_size, crc, method];
+  return [
+    icon + "<span style='vertical-align:super;'>" + name + "</span>",
+    version,
+    modified,
+    comp_size,
+    orig_size,
+    crc,
+    method,
+  ];
 }
 
 function listFiles(dirPath) {
@@ -585,13 +622,21 @@ function listFiles(dirPath) {
     return;
   }
   let filesArr = [];
-  if (dirPath != '/') {
-    filesArr.push({ name: '..', path: path.join(dirPath, '/../'), isDir: true, isFile: false, isSymLink: false, isBackLink: true, type: '--' });
+  if (dirPath != "/") {
+    filesArr.push({
+      name: "..",
+      path: path.join(dirPath, "/../"),
+      isDir: true,
+      isFile: false,
+      isSymLink: false,
+      isBackLink: true,
+      type: "--",
+    });
   }
-  files.forEach(file => {
+  files.forEach((file) => {
     let fullPath = path.join(dirPath, file);
     if (!fs.existsSync(fullPath)) {
-      return
+      return;
     }
     let f = fs.statSync(fullPath);
     let fileObj = {
@@ -604,7 +649,7 @@ function listFiles(dirPath) {
       isBackLink: false,
       mTime: f.mtime,
       size: f.size,
-    }
+    };
     if (fileObj.isFile) {
       fileObj.ext = fn.getFileExt(fullPath);
       fileObj.mimeType = mime.lookup(fullPath);
@@ -613,10 +658,10 @@ function listFiles(dirPath) {
       } else if (fileObj.mimeType in config.fileTypeMap) {
         fileObj.type = config.fileTypeMap[fileObj.mimeType].description;
       } else {
-        fileObj.type = 'Unsupported';
+        fileObj.type = "Unsupported";
       }
     } else {
-      fileObj.type = '--';
+      fileObj.type = "--";
     }
     filesArr.push(fileObj);
   });
@@ -653,7 +698,7 @@ function canRestoreView(url) {
 }
 
 function isViewPresent(url) {
-  return (url in openViews);
+  return url in openViews;
 }
 
 function closeView(url) {

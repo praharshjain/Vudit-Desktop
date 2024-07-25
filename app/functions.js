@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron');
 const fileNotOpened = 'file-not-opened';
 const fileOpened = 'file-opened';
 const fileRestored = 'file-restored';
-let fileTypeMap = null;
+let typeMap = null;
 
 function getFileExt(filePath) {
     return filePath.substring(filePath.lastIndexOf('.') + 1, filePath.length).toLowerCase().trim();
@@ -42,13 +42,13 @@ function getIcon(fileObj) {
 }
 
 function fileNameToIcon(path) {
-    if (!fileTypeMap) {
+    if (!typeMap) {
         getConfig();
     }
     let ext = getFileExt(path);
     let iconPath = 'app/icons/file_default.svg';
-    if (ext in fileTypeMap && fileTypeMap[ext].icon) {
-        iconPath = fileTypeMap[ext].icon;
+    if (ext in typeMap && typeMap[ext].icon) {
+        iconPath = typeMap[ext].icon;
     }
     return '../../' + iconPath;
 }
@@ -73,7 +73,7 @@ function getConfig() {
         //from node process
         config = require('./config');
     }
-    fileTypeMap = config.fileTypeMap;
+    typeMap = config.fileTypeMap;
     return config;
 }
 
@@ -114,6 +114,32 @@ function getReadableSize(fileObj) {
     return Math.round(size * 100) / 100 + arr[i];
 }
 
+function getViewerURLByType(path, ext, mimeType, map) {
+    //let baseURL = 'file://' + __dirname + '/viewer';
+    let baseURL = 'viewer';
+    path = encodeURIComponent(path);
+    if (ext in map) {
+        return baseURL + map[ext].url + path;
+    }
+    if (mimeType in map) {
+        return baseURL + map[mimeType].url + path;
+    }
+    if (mimeType.includes('text')) {
+        return baseURL + map['txt'].url + path;
+    }
+    if (mimeType.includes('video')) {
+        return baseURL + map['mp4'].url + path;
+    }
+    if (mimeType.includes('audio')) {
+        return baseURL + map['mp3'].url + path;
+    }
+    if (mimeType.includes('image')) {
+        return baseURL + map['png'].url + path;
+    }
+    console.log('\n\n unsupported file -> path: ' + path + ' ext: ' + ext + ' mimeType: ' + mimeType);
+    return '';
+}
+
 let common = {
     fileNotOpened: fileNotOpened,
     fileOpened: fileOpened,
@@ -131,6 +157,7 @@ let common = {
     quickLookPreview: quickLookPreview,
     getCurrentFilePath: getCurrentFilePath,
     getParameterByName: getParameterByName,
+    getViewerURLByType: getViewerURLByType,
     getFileNameFromPath: getFileNameFromPath,
 }
 if (typeof module != 'undefined') {

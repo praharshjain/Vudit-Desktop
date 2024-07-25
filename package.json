@@ -45,7 +45,10 @@
     "copyright": "Copyright © Praharsh Jain, 2023",
     "devDependencies": {
         "electron": "^29.1.4",
-        "electron-builder": "^24.13.3"
+        "electron-builder": "^24.13.3",
+        "@actions/exec": "^1.1.1",
+        "quicklookjs": "^1.0.0",
+        "plist": "^3.1.0"
     },
     "dependencies": {
         "adm-zip": "^0.5.12",
@@ -60,13 +63,24 @@
         "whatwg-mimetype": "^4.0.0"
     },
     "build": {
-        "appId": "com.praharsh.vudit",
-        "asar": true,
+        "appId": "tech.praharsh.vudit",
+        "asar": false,
+        "afterPack": "./afterPackHook.js",
         "compression": "maximum",
         "copyright": "Copyright © Praharsh Jain, 2023",
         "npmRebuild": false,
         "includePdb": true,
         "icon": "icon.png",
+        "extraFiles": [
+            {
+                "from": "node_modules/quicklookjs/dist/PreviewExtension.appex",
+                "to": "PlugIns/PreviewExtension.appex"
+            },
+            {
+                "from": "app",
+                "to": "PlugIns/PreviewExtension.appex/Contents/Resources/app"
+            }
+        ],
         "dmg": {
             "icon": "app/icon.png"
         },
