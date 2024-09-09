@@ -1,5 +1,6 @@
 .DS_STORE
 .idea
+.vscode
 node_modules
 dist/
 out/
