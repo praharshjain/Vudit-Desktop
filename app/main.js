@@ -356,7 +356,7 @@ function createMainWindow() {
   if (isDev) {
     mainWindow.webContents.openDevTools();
     //TODO: try if we can get chrome extensions to work
-    const extensions = new ElectronChromeExtensions();
+    const extensions = new ElectronChromeExtensions({ license: 'GPL-3.0' });
     extensions.addTab(mainWindow.webContents, mainWindow);
     session.defaultSession.loadExtension('path/to/unpacked/extension').then(({ id }) => {
       //
