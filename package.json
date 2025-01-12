@@ -44,12 +44,12 @@
     "website": "https://praharsh.tech",
     "copyright": "Copyright © Praharsh Jain, 2023",
     "devDependencies": {
-        "electron": "^33.2.1",
+        "electron": "^33.3.1",
         "electron-builder": "^25.1.8"
     },
     "dependencies": {
         "adm-zip": "^0.5.16",
-        "electron-chrome-extensions": "^4.1.0",
+        "electron-chrome-extensions": "^4.1.1",
         "electron-chromecast": "^1.1.0",
         "electron-prompt": "^1.7.0",
         "follow-redirects": "^1.15.9",
