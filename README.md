@@ -11,8 +11,10 @@ Android version here - https://github.com/praharshjain/Vudit
 Features
 ----------------
 * Files listing
+* Open local or remote files (using URL)
 * Image viewer, music and video player, support for media streaming
 * Document viewer
+* Ebook viewer
 * SWF (Flash) player
 * PGN viewer
 * Code syntax highlighter
@@ -35,23 +37,31 @@ Supported file types and extensions -
     
     Open document formats - "odt", "ott", "odp", "otp", "ods", "ots", "fodt", "fods", "fodp"  
     
-    Other formats: "pdf", "rtf", "djv", "djvu", "epub", "opf", "docx", "tex", "latex", "ipynb"
+    Other formats: "pdf", "rtf", "djv", "djvu", "docx", "tex", "latex", "ipynb"
     
-3. Treedoc files: (with tree and table view): "json", "xml", "fxml", "yaml", "csv"
+3. Ebooks: "epub", "mobi", "azw3", "fb2", "cbz"
+    
+4. Treedoc files: (with tree and table view): "json", "xml", "fxml", "yaml", "csv"
 
-4. Zip Archive (zip)
+5. Zip Archive (zip)
 
-5. SQLite File (sqlite)
+6. SQLite files (sqlite, sqlite3)
 
-6. PGN file (portable game notation)
+7. SWF (Flash) files (swf)
 
-7. Text files and code files (with syntax highlighting):
+8. PGN file (portable game notation)
+
+9. Crossword puzzle files (puz, jpz)
+
+10. Fonts: "ttf", "otf", "woff", "woff2"
+
+11. Text files and code files (with syntax highlighting):
     
     "ascii", "asm", "awk", "bash", "bat", "bf", "bsh", "c", "cert", "cgi", "clj", "conf", "cpp", "cs", "css", "diff", "elr", "go", "h", "hs", "htaccess", "htm", "html", "ini", "java", "js", "key", "lisp", "log", "lua", "md", "mkdn", "pem", "php", "pl", "py", "rb", "readme", "scala", "sh", "sql", "srt", "sub", "tex", "toml", "txt", "vb", "vbs", "vhdl", "wollok", "xsd", "xsl", "iml", "gitignore", "gradle"  
-    
-8. Fonts: "ttf", "otf", "woff", "woff2"
 
-9. Any other file with mime type text
+12. Any other file with mime type text
+
+
 
 
 Usage
