@@ -11,7 +11,6 @@
         <script src="js/libs/zip.min.js"></script>
 
         <script>
-            // try also https://github.com/readium/readium-js-viewer
             document.onreadystatechange = function () {
                 if (document.readyState == "complete") {
                     window.reader = ePubReader(common.getParameterByName("file"), { restore: true });

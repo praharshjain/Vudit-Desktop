@@ -155,19 +155,25 @@
                 }
             }
 
+            async function loadTiff(filePath) {
+                try {
+                    const response = await fetch(filePath);
+                    const arrayBuffer = await response.arrayBuffer();
+                    const tiff = new Tiff({ buffer: arrayBuffer });
+                    const dataUrl = tiff.toCanvas().toDataURL('image/png');
+                    loadImage(dataUrl);
+                } catch (err) {
+                    console.error('Error loading TIFF:', err);
+                    document.getElementById('loader').classList.add('hidden');
+                }
+            }
+
             let filePath = common.getParameterByName('file');
             let ext = common.getFileExt(filePath);
-            if (ext == "tif" || ext == "tiff") {
-                let xhr = new XMLHttpRequest();
-                xhr.responseType = 'arraybuffer';
-                xhr.open('GET', filePath);
-                xhr.onload = function (e) {
-                    let tiff = new Tiff({ buffer: xhr.response });
-                    filePath = tiff.toCanvas().toDataURL("image/png");
-                    loadImage(filePath);
-                };
-                xhr.send();
-            } else if (ext == "heic" || ext == "heif") {
+
+            if (ext === 'tif' || ext === 'tiff') {
+                loadTiff(filePath);
+            } else if (ext === 'heic' || ext === 'heif') {
                 loadHeic(filePath);
             } else {
                 loadImage(filePath);

@@ -37,6 +37,7 @@
         "sqlite-viewer",
         "swf-viewer",
         "treedoc-viewer",
+        "font-viewer",
         "zip-viewer"
     ],
     "author": "Praharsh Jain",
