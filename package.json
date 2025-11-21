@@ -44,16 +44,16 @@
     "website": "https://praharsh.tech",
     "copyright": "Copyright © Praharsh Jain, 2023",
     "devDependencies": {
-        "electron": "^35.1.5",
+        "electron": "^39.2.3",
         "electron-builder": "^26.0.12"
     },
     "dependencies": {
         "adm-zip": "^0.5.16",
-        "electron-chrome-extensions": "^4.7.0",
+        "electron-chrome-extensions": "^4.9.0",
         "electron-chromecast": "^1.1.0",
         "electron-prompt": "^1.7.0",
-        "follow-redirects": "^1.15.9",
-        "menubar": "^9.5.1",
+        "follow-redirects": "^1.15.11",
+        "menubar": "^9.5.2",
         "mime-db": "^1.54.0",
         "mime-lookup": "^0.0.2",
         "v8-compile-cache": "^2.4.0",
