@@ -135,6 +135,33 @@
         "rank": "Images"
     },
     {
+        "ext": "heic",
+        "name": "HEIC",
+        "icon": "app/icons/file_image.svg",
+        "description": "HEIC (High Efficiency Image Coding)",
+        "mimeType": "image/heic",
+        "role": "Viewer",
+        "rank": "Images"
+    },
+    {
+        "ext": "heif",
+        "name": "HEIF",
+        "icon": "app/icons/file_image.svg",
+        "description": "HEIF (High Efficiency Image File Format)",
+        "mimeType": "image/heif",
+        "role": "Viewer",
+        "rank": "Images"
+    },
+    {
+        "ext": "apng",
+        "name": "APNG",
+        "icon": "app/icons/file_image.svg",
+        "description": "Animated Portable Network Graphics",
+        "mimeType": "image/apng",
+        "role": "Viewer",
+        "rank": "Images"
+    },
+    {
         "ext": "mp3",
         "name": "MP3",
         "icon": "app/icons/file_music.svg",

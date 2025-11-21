@@ -6,9 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/photoswipe.css">
         <link rel="stylesheet" href="css/default-skin/default-skin.css">
+        <link rel="stylesheet" href="css/style.css">
     </head>
 
     <body>
+        <!-- Loader -->
+        <div class="loader-container" id="loader">
+            <div class="loader"></div>
+        </div>
+
         <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="pswp__bg"></div>
             <div class="pswp__scroll-wrap">
@@ -43,6 +49,8 @@
         <!-- UI JS file -->
         <script src="js/photoswipe-ui-default.min.js"></script>
         <script src="js/tiff.js"></script>
+        <!-- libheif-js for HEIC/HEIF decoding -->
+        <script src="js/libheif.js"></script>
         <script>
             let pswpElement = document.querySelectorAll('.pswp')[0];
             // define options (if needed)
@@ -57,16 +65,18 @@
                 pinchToClose: false,
                 closeOnScroll: false,
                 closeOnVerticalDrag: false,
+                clickToCloseNonZoomable: false,
                 escKey: false,
                 arrowKeys: false,
             };
             let items = null;
             function show() {
                 let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+                // override the close method to prevent the gallery from ever closing
+                gallery.close = function () { };
                 gallery.init();
-                gallery.listen('destroy', function () {
-                    window.location.reload();
-                });
+                // Hide loader when gallery is ready
+                document.getElementById('loader').classList.add('hidden');
             }
             function loadImage(filePath) {
                 let img = new Image();
@@ -78,8 +88,73 @@
                     },];
                     show();
                 }
+                img.onerror = function () {
+                    document.getElementById('loader').classList.add('hidden');
+                    console.error('Failed to load image');
+                }
                 img.src = filePath;
             }
+
+            async function loadHeic(filePath) {
+                try {
+                    // Fetch the HEIC file
+                    const response = await fetch(filePath);
+                    const arrayBuffer = await response.arrayBuffer();
+
+                    // Decode using libheif
+                    const libHeif = libheif();
+                    const decoder = new libHeif.HeifDecoder();
+
+                    let data = decoder.decode(arrayBuffer);
+                    if (!data || data.length === 0) {
+                        throw new Error('Failed to decode HEIC/HEIF image - no data returned');
+                    }
+
+                    // Process all images in the HEIC file
+                    const processedItems = [];
+
+                    for (let i = 0; i < data.length; i++) {
+                        const image = data[i];
+                        const width = image.get_width();
+                        const height = image.get_height();
+
+                        // Convert to canvas
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        const imageData = ctx.createImageData(width, height);
+
+                        // Display the image (RGBA format)
+                        await new Promise((resolve, reject) => {
+                            image.display(imageData, (displayData) => {
+                                if (!displayData) {
+                                    reject(new Error('Failed to display image'));
+                                    return;
+                                }
+                                ctx.putImageData(displayData, 0, 0);
+                                resolve();
+                            });
+                        });
+
+                        // Convert canvas to data URL and add to items
+                        const dataUrl = canvas.toDataURL('image/png');
+                        processedItems.push({
+                            src: dataUrl,
+                            w: width,
+                            h: height
+                        });
+                    }
+
+                    // Set items and show gallery
+                    items = processedItems;
+                    show();
+                } catch (err) {
+                    console.error('Error loading HEIC/HEIF:', err);
+                    document.getElementById('loader').classList.add('hidden');
+                }
+            }
+
             let filePath = common.getParameterByName('file');
             let ext = common.getFileExt(filePath);
             if (ext == "tif" || ext == "tiff") {
@@ -92,8 +167,11 @@
                     loadImage(filePath);
                 };
                 xhr.send();
+            } else if (ext == "heic" || ext == "heif") {
+                loadHeic(filePath);
+            } else {
+                loadImage(filePath);
             }
-            loadImage(filePath);
 
         </script>
     </body>

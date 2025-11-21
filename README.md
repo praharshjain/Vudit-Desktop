@@ -25,7 +25,7 @@ Supported file types and extensions -
 
     Audio files - "mp3", "ogg", "oga", "wav", "mid", "m4a", "opus", "ogm", "flac", "aac"
     
-    Image files - "png", "jpg", "gif", "bmp", "jpeg", "webp", "svg", "ico", "tif", "tiff", "wmf"  
+    Image files - "png", "jpg", "gif", "bmp", "jpeg", "webp", "svg", "ico", "tif", "tiff", "wmf", "apng", "heic", "heif"  
     
     Video files - "mp4", "mpeg", "m4v", "mkv", "ogv", "webm", "3gp", "mov", "flv", "m3u", "m3u8", "mpd"
 
