@@ -61,7 +61,7 @@ function getRow(fileObj) {
     kind.innerText = common.getKind(fileObj);
     tr.appendChild(kind);
     let type = document.createElement('td');
-    type.innerText = fileObj.type;
+    type.innerText = fileObj.type || '';
     tr.appendChild(type);
     let size = document.createElement('td');
     size.innerText = common.getReadableSize(fileObj);

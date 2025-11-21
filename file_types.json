@@ -459,6 +459,51 @@
         "rank": "TreeDoc"
     },
     {
+        "ext": "epub",
+        "name": "EPub",
+        "icon": "app/icons/file_epub.svg",
+        "description": "Electronic Publication File",
+        "mimeType": "application/epub+zip",
+        "role": "Viewer",
+        "rank": "Ebooks"
+    },
+    {
+        "ext": "mobi",
+        "name": "MOBI",
+        "icon": "app/icons/file_ebook.svg",
+        "description": "Mobipocket Ebook",
+        "mimeType": "application/x-mobipocket-ebook",
+        "role": "Viewer",
+        "rank": "Ebooks"
+    },
+    {
+        "ext": "azw3",
+        "name": "AZW3",
+        "icon": "app/icons/file_ebook.svg",
+        "description": "Kindle Format 8 (KF8)",
+        "mimeType": "application/vnd.amazon.ebook",
+        "role": "Viewer",
+        "rank": "Ebooks"
+    },
+    {
+        "ext": "fb2",
+        "name": "FB2",
+        "icon": "app/icons/file_ebook.svg",
+        "description": "FictionBook 2.0",
+        "mimeType": "application/x-fictionbook+xml",
+        "role": "Viewer",
+        "rank": "Ebooks"
+    },
+    {
+        "ext": "cbz",
+        "name": "CBZ",
+        "icon": "app/icons/file_ebook.svg",
+        "description": "Comic Book Archive (ZIP)",
+        "mimeType": "application/vnd.comicbook+zip",
+        "role": "Viewer",
+        "rank": "Ebooks"
+    },
+    {
         "ext": "rtf",
         "name": "RTF",
         "icon": "app/icons/file_rtf.svg",
@@ -491,24 +536,6 @@
         "icon": "app/icons/file_djvu.svg",
         "description": "DjVu File",
         "mimeType": "image/vnd.djvu",
-        "role": "Viewer",
-        "rank": "Documents"
-    },
-    {
-        "ext": "epub",
-        "name": "EPub",
-        "icon": "app/icons/file_epub.svg",
-        "description": "Electronic Publication File",
-        "mimeType": "application/epub+zip",
-        "role": "Viewer",
-        "rank": "Documents"
-    },
-    {
-        "ext": "opf",
-        "name": "OPF",
-        "icon": "app/icons/file_epub.svg",
-        "description": "Open Packaging Format",
-        "mimeType": "application/oebps-package+xml",
         "role": "Viewer",
         "rank": "Documents"
     },

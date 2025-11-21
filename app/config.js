@@ -4,7 +4,7 @@ const fs = require('fs');
 let data = require(path.join(__dirname, '../package.json'));
 data.build = { fileAssociations: require(path.join(__dirname, '../file_types.json')) };
 
-let arcExt = [], imageExt = [], audioExt = [], videoExt = [], treedocExt = [], markDownExt = [], docExt = [], fontExt = [];
+let arcExt = [], imageExt = [], audioExt = [], videoExt = [], treedocExt = [], markDownExt = [], docExt = [], ebookExt = [], fontExt = [];
 let txtExt = [
     'ascii',
     'asm',
@@ -80,6 +80,10 @@ data.build.fileAssociations.forEach(f => {
             videoExt.push(f.ext);
             f.url = '/mediaviewer/video.html?file=';
             break;
+        case 'Ebooks':
+            ebookExt.push(f.ext);
+            f.url = '/ebookviewer/index.html?file='
+            break;
         case 'Documents':
             docExt.push(f.ext);
             f.url = '/docviewer/index.html?file=';
@@ -108,8 +112,6 @@ for (let ext of txtExt) {
 fileTypeMap['pgn'].url = '/pgnviewer/index.html?file=';
 fileTypeMap['swf'].url = '/swfviewer/index.html?file=';
 fileTypeMap['pdf'].url = '/pdfviewer/external/pdfjs-dist/web/viewer.html?file=';
-fileTypeMap['epub'].url = '/epubviewer/index.html?file=';
-fileTypeMap['opf'].url = '/epubviewer/index.html?file=';
 fileTypeMap['rtf'].url = '/rtfviewer/index.html?file=';
 fileTypeMap['wmf'].url = '/rtfviewer/index.html?file=';
 fileTypeMap['tex'].url = '/latexviewer/index.html?file=';
