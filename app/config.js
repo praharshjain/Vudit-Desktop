@@ -4,7 +4,7 @@ const fs = require('fs');
 let data = require(path.join(__dirname, '../package.json'));
 data.build = { fileAssociations: require(path.join(__dirname, '../file_types.json')) };
 
-let arcExt = [], imageExt = [], audioExt = [], videoExt = [], treedocExt = [], markDownExt = [], docExt = [];
+let arcExt = [], imageExt = [], audioExt = [], videoExt = [], treedocExt = [], markDownExt = [], docExt = [], fontExt = [];
 let txtExt = [
     'ascii',
     'asm',
@@ -83,6 +83,10 @@ data.build.fileAssociations.forEach(f => {
         case 'Documents':
             docExt.push(f.ext);
             f.url = '/docviewer/index.html?file=';
+            break;
+        case 'Fonts':
+            fontExt.push(f.ext);
+            f.url = '/fontviewer/index.html?file=';
             break;
         case 'TreeDoc':
             treedocExt.push(f.ext);
@@ -171,6 +175,7 @@ module.exports = {
     txtExt: txtExt,
     treedocExt: treedocExt,
     markDownExt: markDownExt,
+    fontExt: fontExt,
     dirPaths: dirPaths,
     fileTypeMap: fileTypeMap,
 }

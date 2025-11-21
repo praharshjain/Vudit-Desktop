@@ -655,5 +655,41 @@
         "mimeType": "text/jpz",
         "role": "Viewer",
         "rank": "Documents"
+    },
+    {
+        "ext": "ttf",
+        "name": "TTF",
+        "icon": "app/icons/file_default.svg",
+        "description": "TrueType Font",
+        "mimeType": "font/ttf",
+        "role": "Viewer",
+        "rank": "Fonts"
+    },
+    {
+        "ext": "otf",
+        "name": "OTF",
+        "icon": "app/icons/file_default.svg",
+        "description": "OpenType Font",
+        "mimeType": "font/otf",
+        "role": "Viewer",
+        "rank": "Fonts"
+    },
+    {
+        "ext": "woff",
+        "name": "WOFF",
+        "icon": "app/icons/file_default.svg",
+        "description": "Web Open Font Format",
+        "mimeType": "font/woff",
+        "role": "Viewer",
+        "rank": "Fonts"
+    },
+    {
+        "ext": "woff2",
+        "name": "WOFF2",
+        "icon": "app/icons/file_default.svg",
+        "description": "Web Open Font Format 2.0",
+        "mimeType": "font/woff2",
+        "role": "Viewer",
+        "rank": "Fonts"
     }
 ]

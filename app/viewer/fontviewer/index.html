@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Font Viewer</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="controls">
+                <input type="text" id="preview-text" placeholder="Type here to preview text..."
+                    value="The quick brown fox jumps over the lazy dog">
+                <div class="size-control">
+                    <label for="font-size">Size:</label>
+                    <input type="range" id="font-size" min="12" max="120" value="48">
+                    <span id="size-display">48px</span>
+                </div>
+            </div>
+            <div class="preview-area">
+                <div id="font-preview" class="font-preview">The quick brown fox jumps over the lazy dog</div>
+                <div class="alphabet-preview">
+                    <p>ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+                    <p>abcdefghijklmnopqrstuvwxyz</p>
+                    <p>0123456789</p>
+                    <p>!@#$%^&*()_+-=[]{}|;':",./<>?</p>
+                </div>
+            </div>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+        </div>
+        <script src="../../functions.js"></script>
+        <script src="renderer.js"></script>
+    </body>
+
+</html>
