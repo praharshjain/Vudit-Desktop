@@ -199,12 +199,14 @@ function listView() {
     filesTable.classList.remove('grid-view');
     gridViewBtn.classList.remove('active');
     listViewBtn.classList.add('active');
+    localStorage.setItem('view', 'list');
 }
 
 function gridView() {
     filesTable.classList.add('grid-view');
     listViewBtn.classList.remove('active');
     gridViewBtn.classList.add('active');
+    localStorage.setItem('view', 'grid');
 }
 
 function showOptionsMenu(event) {
@@ -280,4 +282,27 @@ function createMenuItem(txt, icn, onClick) {
     item.appendChild(btn);
     item.setAttribute('title', txt);
     return item;
+}
+
+function updateThemeButtons() {
+    let lightBtn = document.getElementById('theme-btn-light');
+    let darkBtn = document.getElementById('theme-btn-dark');
+    if (lightBtn && darkBtn) {
+        if (theme === 'light') {
+            lightBtn.classList.add('active');
+            darkBtn.classList.remove('active');
+        } else {
+            lightBtn.classList.remove('active');
+            darkBtn.classList.add('active');
+        }
+    }
+}
+
+// Initialize theme buttons
+updateThemeButtons();
+
+// Initialize view
+let savedView = localStorage.getItem('view');
+if (savedView === 'grid') {
+    gridView();
 }

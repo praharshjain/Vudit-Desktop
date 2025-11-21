@@ -17,7 +17,15 @@
 
 .file-options {
     float: right;
-    border: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    background: transparent;
+}
+
+tr:hover .icon-dot-3,
+.grid-view tr:hover .icon-dot-3 {
+    color: #333;
+    border-color: rgba(0, 0, 0, 0.3);
 }
 
 .table-striped tr.active {
@@ -25,9 +33,11 @@
     background-color: #6d6c6d !important;
 }
 
-.nav-group-item .float-right {
-    float: right;
-    margin-right: 0px !important;
+#preview-file {
+    width: 100%;
+    height: 100%;
+    margin-bottom: -6px;
+    border: none;
 }
 
 .nav-group,
@@ -35,10 +45,19 @@
     font-size: 20px;
 }
 
+.nav-group-item .float-right {
+    float: right;
+    margin-right: 0px !important;
+}
+
 .nav-group-item .icon {
     margin-right: 20px;
     font-size: 30px;
     margin-top: -8px;
+}
+
+.nav-group-item.active {
+    border-left: 3px solid #f5a623;
 }
 
 .drop-file {
@@ -87,16 +106,50 @@
     color: #fff;
 }
 
-#preview-file {
-    width: 100%;
-    height: 100%;
-    margin-bottom: -6px;
-    border: none;
-}
-
+table.grid-view thead,
 table.grid-view th,
 table.grid-view #backlink {
     display: none;
+}
+
+table.grid-view,
+table.grid-view tbody {
+    display: block;
+    width: 100%;
+}
+
+table.grid-view tbody {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+table.grid-view tr {
+    display: flex;
+    flex-direction: column;
+    float: none;
+    width: 150px;
+    height: 160px;
+    margin: 5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 5px;
+    background-color: transparent !important;
+}
+
+table.grid-view tr:hover {
+    background-color: #f0f0f0;
+    border-color: #ddd;
+}
+
+table.grid-view tr.active {
+    background-color: #6d6c6d !important;
+    color: #fff;
+    border-color: #5a5959;
 }
 
 table.grid-view td.file-size,
@@ -108,15 +161,9 @@ table.grid-view td.icon-holder {
 table.grid-view td {
     display: none;
     text-align: center;
-}
-
-table.grid-view tr {
-    float: left;
-    width: 150px;
-}
-
-table.grid-view tr:nth-child(even) {
-    background-color: #fff;
+    border: none !important;
+    width: 100%;
+    padding: 2px !important;
 }
 
 table.grid-view .icon-holder,
@@ -125,7 +172,6 @@ table.grid-view .icon-holder .icon {
     height: 80px;
 }
 
-/*  menus css */
 .menu {
     position: absolute;
     width: 200px;
@@ -160,6 +206,7 @@ table.grid-view .icon-holder .icon {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
     display: block;
     width: 100%;
     color: #444;
@@ -248,4 +295,179 @@ table.grid-view .icon-holder .icon {
 .menu-item:hover>.menu {
     -webkit-transition-delay: 100ms;
     transition-delay: 300ms;
+}
+
+@media (max-width: 900px) {
+    .pane-one-fourth.sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .pane-sm.sidebar {
+        display: none;
+    }
+
+    #files-table th:nth-child(3),
+    #files-table td:nth-child(3),
+    #files-table th:nth-child(4),
+    #files-table td:nth-child(4),
+    #files-table th:nth-child(6),
+    #files-table td:nth-child(6) {
+        display: none;
+    }
+
+    table.grid-view tr {
+        width: 100px;
+    }
+
+    table.grid-view .icon-holder,
+    table.grid-view .icon-holder .icon {
+        height: 60px;
+    }
+}
+
+@media (max-width: 400px) {
+
+    #files-table th:nth-child(5),
+    #files-table td:nth-child(5) {
+        display: none;
+    }
+}
+
+body.dark-theme,
+.dark-theme .window,
+.dark-theme .toolbar,
+.dark-theme .pane,
+.dark-theme .nav-group-item,
+.dark-theme .table-striped,
+.dark-theme .table-striped tbody tr:nth-child(odd),
+.dark-theme .list-group-item {
+    background-color: #222;
+    color: #ddd;
+}
+
+.dark-theme .toolbar-header,
+.dark-theme .toolbar-footer {
+    background-color: #252525;
+    background-image: none;
+    border-color: #111;
+    box-shadow: none;
+}
+
+.dark-theme .btn-default {
+    background-color: #333;
+    background-image: none;
+    color: #ddd;
+    border-color: #111;
+}
+
+.dark-theme .btn-default:active,
+.dark-theme .btn-default.active {
+    background-color: #555;
+    color: #fff;
+}
+
+.dark-theme .pane {
+    border-color: #111;
+}
+
+.dark-theme .nav-group-title {
+    color: #aaa;
+}
+
+.dark-theme .nav-group-item.active {
+    background-color: #3a3a3a;
+    color: #fff;
+    border-left: 3px solid #4a90e2;
+}
+
+.dark-theme .table-striped tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.dark-theme .table-striped th {
+    background-color: #333;
+    color: #ddd;
+    border-bottom-color: #111;
+}
+
+.dark-theme .table-striped td {
+    border-bottom-color: #333;
+}
+
+.dark-theme .file-name {
+    color: #ddd;
+}
+
+.dark-theme #search-bar {
+    background-color: #333;
+    color: #ddd;
+    border-color: #111;
+}
+
+.dark-theme table.grid-view tr:hover {
+    background-color: #444;
+    border-color: #555;
+}
+
+.dark-theme table.grid-view tr.active {
+    background-color: #4a90e2 !important;
+    color: #fff;
+    border-color: #357abd;
+}
+
+.dark-theme .menu {
+    background-color: #2a2a2a;
+    border-color: #111;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.dark-theme .menu-item:hover>.menu-btn {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+.dark-theme .menu-separator {
+    background-color: #444;
+    border-bottom: none;
+}
+
+.dark-theme .menu-item.submenu::after {
+    border-left-color: #aaa;
+}
+
+.dark-theme .menu-item.submenu:hover::after {
+    border-left-color: #fff;
+}
+
+.dark-theme .drop-file.active {
+    border-color: #ddd;
+}
+
+.dark-theme #drop-file-text,
+.dark-theme .drop-file span {
+    color: #ddd;
+}
+
+.dark-theme #file-chooser {
+    color: #ddd;
+    border-color: #ddd;
+}
+
+.dark-theme #file-chooser:hover {
+    background-color: #ddd;
+    color: #333;
+}
+
+.dark-theme .icon-dot-3 {
+    color: #888;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.dark-theme tr:hover .icon-dot-3,
+.dark-theme .grid-view tr:hover .icon-dot-3 {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
 }

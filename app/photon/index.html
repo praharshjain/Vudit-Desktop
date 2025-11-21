@@ -41,6 +41,15 @@
               onclick="listView()">
               <span class="icon icon-menu"></span>
             </button>
+          </div>
+          <div class="btn-group btn-large">
+            <button id="theme-btn-light" class="btn btn-default btn-large" title="Light Mode"
+              onclick="setTheme('light')">
+              <span class="icon icon-light-up"></span>
+            </button>
+            <button id="theme-btn-dark" class="btn btn-default btn-large" title="Dark Mode" onclick="setTheme('dark')">
+              <span class="icon icon-moon"></span>
+            </button>
             <!--
             <button class="btn btn-default btn-large">
               <span class="icon icon-info-circled"></span>
@@ -97,6 +106,7 @@
         <h1 class="title" id="footer-text">Vudit</h1>
       </footer>
     </div>
+    <script src="js/theme.js"></script>
     <script src="js/script.js"></script>
   </body>
 
