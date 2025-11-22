@@ -45,8 +45,10 @@
     "website": "https://praharsh.tech",
     "copyright": "Copyright © Praharsh Jain, 2023",
     "devDependencies": {
+        "clean-css": "^5.3.3",
         "electron": "^39.2.3",
-        "electron-builder": "^26.0.12"
+        "electron-builder": "^26.0.12",
+        "terser": "^5.44.1"
     },
     "dependencies": {
         "adm-zip": "^0.5.16",
@@ -68,6 +70,29 @@
         "npmRebuild": false,
         "includePdb": true,
         "icon": "icon.png",
+        "files": [
+            "!**/*.md",
+            "!**/*.map",
+            "!**/*.ts",
+            "!**/.DS_Store",
+            "!**/test/**",
+            "!**/tests/**",
+            "!**/example/**",
+            "!**/examples/**",
+            "!**/demo/**",
+            "!**/docs/**",
+            "!**/.git/**",
+            "!**/.github/**",
+            "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme,HISTORY.md,CONTRIBUTING.md,AUTHORS,CONTRIBUTORS}",
+            "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples,demo,demos}",
+            "!**/node_modules/*/.bin",
+            "!**/node_modules/*.d.ts",
+            "!**/{.editorconfig,.eslintrc,.eslintrc.json,.eslintrc.js,.prettierrc,.babelrc,.travis.yml,.gitlab-ci.yml,appveyor.yml,circle.yml}",
+            "!**/{tsconfig.json,tslint.json,typings.json}",
+            "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+            "!**/{npm-debug.log,yarn.lock,yarn-error.log,.yarn-integrity,.yarn-metadata.json,package-lock.json}",
+            "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.vscode,.nyc_output,coverage}"
+        ],
         "dmg": {
             "icon": "app/icon.png"
         },
